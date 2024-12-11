@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SplitBuddy.Api.Helpers;
 using SplitBuddy.Api.Models.Api;
@@ -13,14 +12,14 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly PasswordHasher _passwordHasher;
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
 
-        public AuthController(AppDbContext context, PasswordHasher passwordHasher,IConfiguration configuration)
+        public UserController(AppDbContext context, PasswordHasher passwordHasher,IConfiguration configuration)
         {
             _context = context;
             _passwordHasher = passwordHasher;
@@ -30,8 +29,7 @@ namespace SplitBuddy.Api.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginFormVm request)
         {
-            // Znajdź użytkownika w bazie danych
-            var user = _context.Users.SingleOrDefault(u => u.Username == request.UserName);
+            var user = _context.Users.SingleOrDefault(u => u.Username == request.Username);
             if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid credentials");
@@ -45,24 +43,20 @@ namespace SplitBuddy.Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterFormVm request)
         {
-            // Sprawdź, czy użytkownik już istnieje
             if (_context.Users.Any(u => u.Username == request.Username))
             {
                 return BadRequest("User already exists.");
             }
 
-            // Hashowanie hasła z użyciem PasswordHasher
             var passwordHash = _passwordHasher.HashPassword(request.Password);
 
-            // Utworzenie nowego użytkownika
             var user = new User
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                Role = "User" // Domyślna rola
+                Role = "User",
             };
 
-            // Dodanie użytkownika do bazy danych
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
