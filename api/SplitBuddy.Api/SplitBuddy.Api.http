@@ -1,0 +1,6 @@
+@SplitBuddy.Api_HostAddress = http://localhost:5027
+
+GET {{SplitBuddy.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
