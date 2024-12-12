@@ -1,24 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:split_buddy/components/login.dart';
+import 'package:split_buddy/components/register.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login or Register',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SelectionScreen(),
-    );
-  }
-}
-
-class SelectionScreen extends StatelessWidget {
+class Preload extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +25,7 @@ class SelectionScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => Login()),
                   );
                 },
                 child: Text('Log In'),
@@ -51,7 +35,7 @@ class SelectionScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    MaterialPageRoute(builder: (context) => Register()),
                   );
                 },
                 child: Text('Register'),
@@ -64,30 +48,6 @@ class SelectionScreen extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Log In'),
-      ),
-      body: Center(
-        child: Text('Login Screen', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
 
-class RegisterScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-      ),
-      body: Center(
-        child: Text('Register Screen', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
+
+
