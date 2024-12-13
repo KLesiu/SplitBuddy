@@ -5,7 +5,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Log In'),
+        title: Text('Sign In'),
       ),
       body: Center(
         child: Text('Login Screen', style: TextStyle(fontSize: 24)),

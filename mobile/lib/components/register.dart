@@ -5,7 +5,7 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Sign up'),
       ),
       body: Center(
         child: Text('Register Screen', style: TextStyle(fontSize: 24)),
