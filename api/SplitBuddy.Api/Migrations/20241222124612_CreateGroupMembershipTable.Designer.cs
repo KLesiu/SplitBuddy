@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SplitBuddy.Api.Services;
@@ -11,9 +12,11 @@ using SplitBuddy.Api.Services;
 namespace SplitBuddy.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241222124612_CreateGroupMembershipTable")]
+    partial class CreateGroupMembershipTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,73 +73,6 @@ namespace SplitBuddy.Api.Migrations
                     b.ToTable("GroupMembership");
                 });
 
-            modelBuilder.Entity("SplitBuddy.Api.Models.Entities.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.PrimitiveCollection<int[]>("Categories")
-                        .HasColumnType("integer[]");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("PayerId");
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("SplitBuddy.Api.Models.Entities.PaymentSplits", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("DebtorId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("PercentageCost")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DebtorId");
-
-                    b.HasIndex("PaymentId");
-
-                    b.ToTable("PaymentSplits");
-                });
-
             modelBuilder.Entity("SplitBuddy.Api.Models.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -190,44 +126,6 @@ namespace SplitBuddy.Api.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SplitBuddy.Api.Models.Entities.Payment", b =>
-                {
-                    b.HasOne("SplitBuddy.Api.Models.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SplitBuddy.Api.Models.Entities.User", "Payer")
-                        .WithMany()
-                        .HasForeignKey("PayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("Payer");
-                });
-
-            modelBuilder.Entity("SplitBuddy.Api.Models.Entities.PaymentSplits", b =>
-                {
-                    b.HasOne("SplitBuddy.Api.Models.Entities.User", "Debtor")
-                        .WithMany()
-                        .HasForeignKey("DebtorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SplitBuddy.Api.Models.Entities.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Debtor");
-
-                    b.Navigation("Payment");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,9 @@
-﻿namespace SplitBuddy.Api.Models.Entities
+﻿using SplitBuddy.Api.Models.Base;
+
+namespace SplitBuddy.Api.Models.Entities
 {
-    public class User
+    public class User : Entity
     {
-        public int Id { get; set; }
         public required string Username { get; set; }
         public required string PasswordHash { get; set; }
         public required string Role { get; set; }

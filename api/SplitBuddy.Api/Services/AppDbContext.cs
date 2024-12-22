@@ -9,6 +9,11 @@ namespace SplitBuddy.Api.Services
 
         public required DbSet<Group> Groups { get; set; }
 
+        public required DbSet<GroupMembership> GroupMembership { get; set; }
+
+        public required DbSet<Payment> Payments { get; set; }
+
+        public required DbSet<PaymentSplits> PaymentSplits { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
