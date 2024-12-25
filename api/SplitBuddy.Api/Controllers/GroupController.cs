@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SplitBuddy.Api.Models.Api;
+using SplitBuddy.Api.Models.Entities;
 using SplitBuddy.Api.Services;
 
 namespace SplitBuddy.Api.Controllers
@@ -9,23 +12,55 @@ namespace SplitBuddy.Api.Controllers
     public class GroupController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public GroupController(AppDbContext context)
+
+        public GroupController(AppDbContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
 
         }
 
-        //[HttpGet("/getGroup")]
-        //public async Task<GroupFormVm> Get([FromBody] int id)
-        //{
-        //    var group = _context.Groups.SingleOrDefault(u => u.Id == id);
-           
-            
+        [HttpGet("/getGroup/{groupId}")]
+        public async Task<GroupFormVm> Get(int groupId)
+        {
+            var group = await  _context.Groups.Include(g => g.Owner).SingleOrDefaultAsync(u => u.Id == groupId);
+            return  _mapper.Map<GroupFormVm>(group);
+        }
 
-        //}
-     
-        
+        [HttpPost("/createGroup/{userId}")]
+        public async Task<int?> Create(int userId,[FromBody] GroupFormVm form)
+
+        {
+            var user =  await _context.Users.SingleOrDefaultAsync(u=>u.Id == userId);
+            if (user is null) return null;
+            var newGroup = new Group
+            {
+                Name = form.Name,
+                Owner = user,
+                CreatedDate = DateTime.UtcNow,
+
+            };
+
+            _context.Groups.Add(newGroup);
+            await _context.SaveChangesAsync();
+            return newGroup.Id;
+
+        }
+
+        [HttpPost("/updateGroup")]
+        public async Task<int?> Update([FromBody] GroupFormVm form)
+        {
+            var group = await _context.Groups.SingleOrDefaultAsync(u=>u.Id == form.Id);
+            if (group is null) return null;
+            group.Owner = form.Owner;   
+            group.Name = form.Name;
+            await _context.SaveChangesAsync();
+            return group.Id;
+        }
+
+
 
     }
 }

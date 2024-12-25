@@ -22,6 +22,8 @@ namespace SplitBuddy.Api
 
             builder.Services.AddControllers();
             builder.Services.AddSingleton<PasswordHasher>();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

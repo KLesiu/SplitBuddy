@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SplitBuddy.Api.Enums;
 using SplitBuddy.Api.Helpers;
 using SplitBuddy.Api.Models.Api;
 using SplitBuddy.Api.Models.Entities;
@@ -54,7 +55,7 @@ namespace SplitBuddy.Api.Controllers
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                Role = "User",
+                Role = Roles.User.ToString(),
             };
 
             _context.Users.Add(user);
