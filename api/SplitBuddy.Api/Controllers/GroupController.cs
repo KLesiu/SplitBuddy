@@ -54,7 +54,6 @@ namespace SplitBuddy.Api.Controllers
         {
             var group = await _context.Groups.SingleOrDefaultAsync(u=>u.Id == form.Id);
             if (group is null) return null;
-            group.Owner = form.Owner;   
             group.Name = form.Name;
             await _context.SaveChangesAsync();
             return group.Id;
