@@ -40,11 +40,11 @@ namespace SplitBuddy.Api.Controllers
             var groupMemberShipEntityForm = new GroupMembership { Group= group, User=user};
             var result = await Create(groupMemberShipEntityForm);
             if(result is null) return false;
-            return true;
+            return true; 
 
         }
 
-        [HttpPost("/deleteMember")]
+        [HttpDelete("/deleteMember")]
         public async Task<bool> DeleteMember([FromBody] MemberFormVm form)
         {
             var groupMemberShip = await _context.GroupMembership.Where(s=>s.Group.Id == form.GroupId && s.User.Id == form.UserId).SingleOrDefaultAsync();
