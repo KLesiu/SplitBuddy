@@ -29,11 +29,11 @@ namespace SplitBuddy.Api.Controllers
             return  _mapper.Map<GroupFormVm>(group);
         }
 
-        [HttpPost("/createGroup/{userId}")]
-        public async Task<int?> Create(int userId,[FromBody] GroupFormVm form)
+        [HttpPost("/createGroup")]
+        public async Task<int?> Create([FromBody] GroupFormVm form)
 
         {
-            var user =  await _context.Users.SingleOrDefaultAsync(u=>u.Id == userId);
+            var user =  await _context.Users.SingleOrDefaultAsync(u=>u.Id == form.Owner.Id);
             if (user is null) return null;
             var newGroup = new Group
             {
