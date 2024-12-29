@@ -29,12 +29,5 @@ namespace SplitBuddy.Api.Controllers
             return _mapper.Map<PaymentSplitsFormVm>(paymentSplit);
         }
 
-       [HttpPost("/createPaymentSplit")]
-       public async Task<PaymentSplits> CreatePaymentSplit(PaymentSplits form)
-        {
-            _context.PaymentSplits.Add(form);
-            await _context.SaveChangesAsync();
-            return form;
-        }
     }
 }

@@ -7,19 +7,18 @@ using SplitBuddy.Api.Services;
 
 namespace SplitBuddy.Api.Controllers
 {
-
+    [ApiController]
+    [Route("api/[controller]")]
     public class PaymentController
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private readonly PaymentSplitsController _paymentSplitsController;
 
 
-        public PaymentController(AppDbContext context, IMapper mapper, PaymentSplitsController paymentSplitsController)
+        public PaymentController(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _paymentSplitsController = paymentSplitsController;
 
         }
 
@@ -33,24 +32,46 @@ namespace SplitBuddy.Api.Controllers
         [HttpPost("createPaymentInsideGroup")]
         public async Task<int?> CreatePaymentInsideGroup([FromBody] PaymentVm form)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(s=>s.Id == form.PayerId);
+            var user = await _context.Users.SingleOrDefaultAsync(s => s.Id == form.PayerId);
             if (user is null) return null;
+
             var group = await _context.Groups.SingleOrDefaultAsync(s => s.Id == form.GroupId);
-            if(group is null) return null;  
-            var newPayment = new Payment { Currency = form.Currency,Price=form.Price,DateTime=form.DateTime,Description=form.Description,Payer= user,Categories=form.Categories,Group=group };
+            if (group is null) return null;
+
+            var newPayment = new Payment
+            {
+                Currency = form.Currency,
+                Price = form.Price,
+                DateTime = form.DateTime,
+                Description = form.Description,
+                Payer = user,
+                Categories = form.Categories,
+                Group = group
+            };
+
             _context.Payments.Add(newPayment);
             await _context.SaveChangesAsync();
-            form.PaymentSplits.ForEach(async paymentSplitPart =>
+
+            foreach (var paymentSplitPart in form.PaymentSplits)
             {
                 var debtor = await _context.Users.SingleOrDefaultAsync(s => s.Id == paymentSplitPart.DebtorId);
-                if(debtor is null) return;
+                if (debtor is null) continue;
 
-                var paymentSplit = new PaymentSplits { Cost = paymentSplitPart.Cost, Payment = newPayment, Debtor = debtor, PercentageCost = paymentSplitPart.PercentageCost };
-                await _paymentSplitsController.CreatePaymentSplit(paymentSplit);
-            });
+                var paymentSplit = new PaymentSplits
+                {
+                    Cost = paymentSplitPart.Cost,
+                    Payment = newPayment,
+                    Debtor = debtor,
+                    PercentageCost = paymentSplitPart.PercentageCost
+                };
+
+                _context.PaymentSplits.Add(paymentSplit);
+            }
+
+            await _context.SaveChangesAsync();
             return newPayment.Id;
-
         }
+
 
         private async Task<int> CreatePayment(Payment form)
         {
