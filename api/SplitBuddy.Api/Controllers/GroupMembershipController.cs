@@ -9,18 +9,10 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GroupMembershipController
+    public class GroupMembershipController(AppDbContext context, IMapper mapper)
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
-
-
-        public GroupMembershipController(AppDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-
-        }
+        private readonly AppDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet("/getGroupMembership/{groupMembershipId}")]
         public async Task<GroupMembershipFormVm> Get(int groupMembershipId)

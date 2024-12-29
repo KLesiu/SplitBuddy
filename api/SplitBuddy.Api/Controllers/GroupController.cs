@@ -9,18 +9,10 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GroupController : ControllerBase
+    public class GroupController(AppDbContext context, IMapper mapper) : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
-
-
-        public GroupController(AppDbContext context,IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-
-        }
+        private readonly AppDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet("/getGroup/{groupId}")]
         public async Task<GroupFormVm> Get(int groupId)

@@ -9,18 +9,10 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PaymentSplitsController
+    public class PaymentSplitsController(AppDbContext context, IMapper mapper)
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
-
-
-        public PaymentSplitsController(AppDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-
-        }
+        private readonly AppDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet("/getPaymentSplit/{paymentSplitId}")]
         public async Task<PaymentSplitsFormVm> GetPaymentSplit(int paymentSplitId)

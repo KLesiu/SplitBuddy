@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:split_buddy/enums/HttpResponses.dart';
+import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
 import 'login.dart';
+import 'package:http/http.dart' as http;
 
 class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -8,18 +14,33 @@ class Register extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final String? apiUrl = dotenv.env['API_URL'];
+  final HttpService httpService = HttpService();
 
   // Funkcja obsługująca logikę rejestracji
-  void handleRegister(BuildContext context) {
+  void handleRegister(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      final username = usernameController.text;
-      final email = emailController.text;
-      final password = passwordController.text;
+      var response = await submit();
+      var result = response.body;
+      if(result == HttpResponses.success.message){
+        NavigatorService.navigateTo(context, Login());
+      }
 
       // Po poprawnej walidacji przenosimy na ekran logowania
-      NavigatorService.navigateTo(context, Login());
     }
+  }
+
+  Future<http.Response> submit() async {
+    var body = {
+      'username': usernameController.text,
+      'password': passwordController.text,
+      "confirmPassword": confirmPasswordController.text,
+      "email": emailController.text
+    };
+    var response = await httpService.post("/api/User/register", body);
+    return response;
   }
 
   @override
@@ -124,9 +145,3 @@ class Register extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
