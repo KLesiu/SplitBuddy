@@ -25,7 +25,7 @@ namespace SplitBuddy.Api.Controllers
         [HttpGet("/getPaymentSplit/{paymentSplitId}")]
         public async Task<PaymentSplitsFormVm> GetPaymentSplit(int paymentSplitId)
         {
-            var paymentSplit = await _context.PaymentSplits.Include(g=>g.Debtor).Include(g=>g.Payment).SingleOrDefaultAsync(u=>u.Id == paymentSplitId);
+            var paymentSplit = await _context.PaymentSplits.Include(g=>g.Debtor).Include(g=>g.Payment).Include(g=>g.Payment.Group).Include(g=>g.Payment.Payer).SingleOrDefaultAsync(u=>u.Id == paymentSplitId);
             return _mapper.Map<PaymentSplitsFormVm>(paymentSplit);
         }
 
