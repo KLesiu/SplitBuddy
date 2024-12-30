@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SplitBuddy.Api.Enums;
 using SplitBuddy.Api.Helpers;
 using SplitBuddy.Api.Models.Api;
 using SplitBuddy.Api.Models.Entities;
@@ -12,19 +13,11 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController(AppDbContext context, PasswordHasher passwordHasher, IConfiguration configuration) : ControllerBase
     {
-        private readonly PasswordHasher _passwordHasher;
-        private readonly AppDbContext _context;
-        private readonly IConfiguration _configuration;
-
-
-        public UserController(AppDbContext context, PasswordHasher passwordHasher,IConfiguration configuration)
-        {
-            _context = context;
-            _passwordHasher = passwordHasher;
-            _configuration = configuration;
-        }
+        private readonly PasswordHasher _passwordHasher = passwordHasher;
+        private readonly AppDbContext _context = context;
+        private readonly IConfiguration _configuration = configuration;
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginFormVm request)
@@ -54,13 +47,12 @@ namespace SplitBuddy.Api.Controllers
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                Role = "User",
+                Role = Roles.User.ToString(),
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
-            return Ok("User registered successfully.");
+            return Ok(Responses.SUCCESS);
         }
 
         private string GenerateJwtToken(User user)
