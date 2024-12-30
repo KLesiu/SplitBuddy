@@ -18,7 +18,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
         title: Text('Sign In'),
         backgroundColor: Colors.green[900],
@@ -37,7 +37,7 @@ class Login extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[300],
+                    color: Colors.green[600],
                   ),
                 ),
                 SizedBox(height: 20),
@@ -45,13 +45,13 @@ class Login extends StatelessWidget {
                   controller: usernameController,
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    labelStyle: TextStyle(color: Colors.green[300]),
+                    labelStyle: TextStyle(color: Colors.amber[700]),
                     border: OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green[300]!),
+                      borderSide: BorderSide(color: Colors.amber[700]!),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green[500]!),
+                      borderSide: BorderSide(color: Colors.amber[700]!),
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
@@ -67,13 +67,13 @@ class Login extends StatelessWidget {
                   controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: TextStyle(color: Colors.green[300]),
+                    labelStyle: TextStyle(color: Colors.amber[700]),
                     border: OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green[300]!),
+                      borderSide: BorderSide(color: Colors.amber[700]!),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green[500]!),
+                      borderSide: BorderSide(color: Colors.amber[700]!),
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
@@ -90,10 +90,11 @@ class Login extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber[700],
-                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.green[800],
+                      foregroundColor: Colors.amber[700],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.zero,
+                        side: BorderSide(color: Colors.amber[700]!, width: 2),
                       ),
                     ),
                     onPressed: () => handleLogin(context),
