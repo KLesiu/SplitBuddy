@@ -21,7 +21,7 @@ class Register extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        title: Text('Sign up'),
+        title: Text('Sign up',  style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
         backgroundColor: Colors.green[900],
       ),
       body: Center(

@@ -20,7 +20,8 @@ class Login extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: Text('Sign In', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)
+        ),
         backgroundColor: Colors.green[900],
       ),
       body: Center(
