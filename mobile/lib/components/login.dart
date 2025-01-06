@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:split_buddy/enums/HttpResponses.dart';
+import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
+import 'package:http/http.dart' as http;
 import 'home.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final String? apiUrl = dotenv.env['API_URL'];
+  final HttpService httpService = HttpService();
 
+  void handleLogin(BuildContext context) async{
+    var response = await submit();
+    var result = response.body;
+    if(result != HttpResponses.unauthorized.message ) {
+      NavigatorService.navigateTo(context, Home());
+    }
+
+  }
+  Future<http.Response>submit()async{
+    var body = {
+      "username":usernameController.text,
+      "password":passwordController.text
+    };
+    var response = await httpService.post("/api/User/login",body);
+    return response;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,20 +65,8 @@ class Login extends StatelessWidget {
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    final username = usernameController.text;
-                    final password = passwordController.text;
-
-                    if (username.isEmpty || password.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill in all fields')),
-                      );
-                    } else {
-                      // Po zalogowaniu przenosimy na ekran główny
-                      NavigatorService.navigateTo(context, Home());
-                    }
-                  },
-                  child: Text('Login'),
+                  onPressed: ()=>handleLogin(context),
+                  child: Text("Sign In"),
                 ),
               ),
             ],

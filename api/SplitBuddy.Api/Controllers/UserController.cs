@@ -25,7 +25,7 @@ namespace SplitBuddy.Api.Controllers
             var user = _context.Users.SingleOrDefault(u => u.Username == request.Username);
             if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
             {
-                return Unauthorized("Invalid credentials");
+                return Unauthorized(Responses.UNAUTHORIZED);
             }
 
             // Generowanie tokenu JWT

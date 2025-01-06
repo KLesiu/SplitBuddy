@@ -1,6 +1,7 @@
 enum HttpResponses {
   success('Success'),
-  failed('Failed');
+  failed('Failed'),
+  unauthorized("Unauthorized");
 
   final String message;
 
