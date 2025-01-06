@@ -44,8 +44,10 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        title: Text('Sign up'),
+        title: Text('Sign up',  style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+        backgroundColor: Colors.green[900],
       ),
       body: Center(
         child: Padding(
@@ -58,15 +60,27 @@ class Register extends StatelessWidget {
               children: [
                 Text(
                   'Register Screen',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green[600],
+                  ),
                 ),
                 SizedBox(height: 20),
                 TextFormField(
                   controller: usernameController,
                   decoration: InputDecoration(
                     labelText: 'Username',
+                    labelStyle: TextStyle(color: Colors.amber[700]),
                     border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
                   ),
+                  style: TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a username';
@@ -79,8 +93,16 @@ class Register extends StatelessWidget {
                   controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
+                    labelStyle: TextStyle(color: Colors.amber[700]),
                     border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
                   ),
+                  style: TextStyle(color: Colors.white),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -97,8 +119,16 @@ class Register extends StatelessWidget {
                   controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    labelStyle: TextStyle(color: Colors.amber[700]),
                     border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
                   ),
+                  style: TextStyle(color: Colors.white),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -115,8 +145,16 @@ class Register extends StatelessWidget {
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
+                    labelStyle: TextStyle(color: Colors.amber[700]),
                     border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[700]!),
+                    ),
                   ),
+                  style: TextStyle(color: Colors.white),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -130,9 +168,20 @@ class Register extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Center(
-                  child: ElevatedButton(
-                    onPressed: () => handleRegister(context),
-                    child: Text('Sign Up'),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[700],
+                        foregroundColor: Colors.amber[700],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                          side: BorderSide(color: Colors.amber[700]!, width: 2),
+                        ),
+                      ),
+                      onPressed: () => handleRegister(context),
+                      child: Text('Sign Up'),
+                    ),
                   ),
                 ),
               ],
