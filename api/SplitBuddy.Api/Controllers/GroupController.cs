@@ -14,14 +14,14 @@ namespace SplitBuddy.Api.Controllers
         private readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet("/getGroup/{groupId}")]
+        [HttpGet("getGroup/{groupId}")]
         public async Task<GroupFormVm> Get(int groupId)
         {
             var group = await  _context.Groups.Include(g => g.Owner).SingleOrDefaultAsync(u => u.Id == groupId);
             return  _mapper.Map<GroupFormVm>(group);
         }
 
-        [HttpPost("/createGroup")]
+        [HttpPost("createGroup")]
         public async Task<int?> Create([FromBody] GroupFormVm form)
 
         {
@@ -41,7 +41,7 @@ namespace SplitBuddy.Api.Controllers
 
         }
 
-        [HttpPost("/updateGroup")]
+        [HttpPost("updateGroup")]
         public async Task<int?> Update([FromBody] GroupFormVm form)
         {
             var group = await _context.Groups.SingleOrDefaultAsync(u=>u.Id == form.Id);

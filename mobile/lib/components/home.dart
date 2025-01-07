@@ -41,7 +41,6 @@ class Home extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Główna wiadomość
               Text(
                 'Welcome to Split Buddy!',
                 textAlign: TextAlign.center,

@@ -14,7 +14,7 @@ namespace SplitBuddy.Api.Controllers
         private readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet("/getPaymentSplit/{paymentSplitId}")]
+        [HttpGet("getPaymentSplit/{paymentSplitId}")]
         public async Task<PaymentSplitsFormVm> GetPaymentSplit(int paymentSplitId)
         {
             var paymentSplit = await _context.PaymentSplits.Include(g=>g.Debtor).Include(g=>g.Payment).Include(g=>g.Payment.Group).Include(g=>g.Payment.Payer).SingleOrDefaultAsync(u=>u.Id == paymentSplitId);

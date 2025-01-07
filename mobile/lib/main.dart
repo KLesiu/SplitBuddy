@@ -14,6 +14,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SplitBuddy',
       theme: ThemeData(
+        fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
       home: Preload(),

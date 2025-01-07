@@ -27,3 +27,14 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: lib/assets/fonts/Inter_24pt-Regular.ttf
+        - asset: lib/assets/fonts/Inter_24pt-Bold.ttf
+          weight: 700
+        - asset: lib/assets/fonts/Inter_24pt-LightItalic.ttf
+          style: italic
+        - asset: lib/assets/fonts/Inter_24pt-Light.ttf
+
+
