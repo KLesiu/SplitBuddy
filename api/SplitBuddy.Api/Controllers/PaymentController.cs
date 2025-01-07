@@ -14,7 +14,7 @@ namespace SplitBuddy.Api.Controllers
         private readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet("/getPayment/{paymentId}")]
+        [HttpGet("getPayment/{paymentId}")]
         public async Task<PaymentFormVm> Get(int paymentId)
         {
             var payment =  await _context.Payments.Include(g=>g.Payer).Include(g=>g.Group).SingleOrDefaultAsync(u=>u.Id == paymentId); 
@@ -64,13 +64,6 @@ namespace SplitBuddy.Api.Controllers
             return newPayment.Id;
         }
 
-
-        private async Task<int> CreatePayment(Payment form)
-        {
-            _context.Payments.Add(form);
-            await _context.SaveChangesAsync();
-            return form.Id;
-        }
     }
 
 

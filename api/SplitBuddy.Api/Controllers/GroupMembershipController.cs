@@ -14,14 +14,14 @@ namespace SplitBuddy.Api.Controllers
         private readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet("/getGroupMembership/{groupMembershipId}")]
+        [HttpGet("getGroupMembership/{groupMembershipId}")]
         public async Task<GroupMembershipFormVm> Get(int groupMembershipId)
         {
             var groupMembership = await _context.GroupMembership.Include(g => g.User).Include(g => g.Group).SingleOrDefaultAsync(u=>u.Id == groupMembershipId);
             return _mapper.Map<GroupMembershipFormVm>(groupMembership);
         }
 
-        [HttpPost("/joinNewMember")]
+        [HttpPost("joinNewMember")]
         public async Task<bool> JoinNewMember([FromBody] MemberFormVm form)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == form.UserId);
@@ -36,7 +36,7 @@ namespace SplitBuddy.Api.Controllers
 
         }
 
-        [HttpDelete("/deleteMember")]
+        [HttpDelete("deleteMember")]
         public async Task<bool> DeleteMember([FromBody] MemberFormVm form)
         {
             var groupMemberShip = await _context.GroupMembership.Where(s=>s.Group.Id == form.GroupId && s.User.Id == form.UserId).SingleOrDefaultAsync();
