@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'components/home.dart';
 import 'components/preload.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -16,7 +17,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Preload(),
+      home: Home(),
     );
   }
 }
