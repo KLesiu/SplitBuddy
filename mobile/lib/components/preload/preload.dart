@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/login.dart';
-import 'package:split_buddy/components/register.dart';
+import 'package:split_buddy/components/login/login.dart';
+import 'package:split_buddy/components/register/register.dart';
 import 'package:split_buddy/services/navigatorService.dart';
 
 class Preload extends StatelessWidget {

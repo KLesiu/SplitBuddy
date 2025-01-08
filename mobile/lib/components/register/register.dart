@@ -4,8 +4,8 @@ import 'package:split_buddy/constants/color-constants.dart';
 import 'package:split_buddy/enums/HttpResponses.dart';
 import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
-import 'elements/custom-form-input.dart';
-import 'login.dart';
+import '../elements/custom-form-input.dart';
+import '../login/login.dart';
 import 'package:http/http.dart' as http;
 
 class Register extends StatelessWidget {

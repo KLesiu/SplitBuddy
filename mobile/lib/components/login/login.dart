@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:split_buddy/components/register.dart';
+import 'package:split_buddy/components/register/register.dart';
 import 'package:split_buddy/enums/HttpResponses.dart';
 import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
 import 'package:http/http.dart' as http;
-import 'home.dart';
+import '../home/home.dart';
 
 class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();

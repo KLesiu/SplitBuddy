@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'components/home.dart';
-import 'components/preload.dart';
+import 'components/home/home.dart';
+import 'components/preload/preload.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async{
