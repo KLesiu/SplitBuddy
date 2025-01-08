@@ -36,9 +36,18 @@ namespace SplitBuddy.Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterFormVm request)
         {
-            if (_context.Users.Any(u => u.Username == request.Username))
+            var existingUser = _context.Users
+                .Where(u => u.Username == request.Username || u.Email == request.Email)
+                .Select(u => new { u.Username, u.Email })
+                .FirstOrDefault();
+
+            if (existingUser != null)
             {
-                return BadRequest("User already exists.");
+                if (existingUser.Username == request.Username)
+                    return BadRequest(Responses.USEREXIST);
+
+                if (existingUser.Email == request.Email)
+                    return BadRequest(Responses.EMAILEXIST);
             }
 
             var passwordHash = _passwordHasher.HashPassword(request.Password);
@@ -48,12 +57,14 @@ namespace SplitBuddy.Api.Controllers
                 Username = request.Username,
                 PasswordHash = passwordHash,
                 Role = Roles.User.ToString(),
+                Email = request.Email,
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return Ok(Responses.SUCCESS);
         }
+
 
         private string GenerateJwtToken(User user)
         {

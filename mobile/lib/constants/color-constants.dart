@@ -9,4 +9,5 @@ class ColorConstants{
   static Color cardBackgroundColor = const Color.fromRGBO(31, 31, 31, 1);
   static Color blackColor = const Color.fromRGBO(0, 0, 0,1);
   static Color greyColor = const Color.fromRGBO(135, 135, 135, 1);
+  static Color errorColor = const Color.fromRGBO(206, 33, 33, 1.0);
 }

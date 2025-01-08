@@ -16,6 +16,7 @@ namespace SplitBuddy.Api.AutoMapper
             CreateMap<User, UserFormVm>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.Id))
                 .ForMember(d => d.Role, s => s.MapFrom(a => a.Role))
+                .ForMember(d=>d.Email,s=>s.MapFrom(s=>s.Email))
                 .ForMember(d => d.Username, s => s.MapFrom(a => a.Username));
 
             CreateMap<GroupMembership, GroupMembershipFormVm>()

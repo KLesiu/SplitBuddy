@@ -1,177 +1,168 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:split_buddy/components/elements/custom-form-input.dart';
 import 'package:split_buddy/components/register/register.dart';
+import 'package:split_buddy/constants/color-constants.dart';
 import 'package:split_buddy/enums/HttpResponses.dart';
 import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
 import 'package:http/http.dart' as http;
+import 'package:split_buddy/stores/userStore.dart';
+
 import '../home/home.dart';
 
-class Login extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
 
+class _LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final String? apiUrl = dotenv.env['API_URL'];
   final HttpService httpService = HttpService();
 
-  void handleLogin(BuildContext context) async{
-    var response = await submit();
-    var result = response.body;
-    if(result != HttpResponses.unauthorized.message ) {
-      NavigatorService.navigateTo(context, Home());
-    }
+  String? errorMessage;
 
+  void handleLogin(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      var response = await submit();
+      var result = response.body;
+      if (result != HttpResponses.unauthorized.message) {
+        setState(() {
+          errorMessage = null;
+        });
+        var decoded = jsonDecode(result);
+        var user = User(username: usernameController.text, token: decoded['token']);
+
+        await UserStore().saveUser(user);
+        NavigatorService.navigateTo(context, Home());
+      } else {
+        setState(() {
+          errorMessage = result;
+        });
+      }
+    }
   }
-  Future<http.Response>submit()async{
+
+  Future<http.Response> submit() async {
     var body = {
-      "username":usernameController.text,
-      "password":passwordController.text
+      "username": usernameController.text,
+      "password": passwordController.text,
     };
-    var response = await httpService.post("/api/User/login",body);
-    return response;
+    return await httpService.post("/api/User/login", body);
   }
+
+  void goToRegister(context) {
+    NavigatorService.navigateTo(context, Register());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        title: Text(
-          'Sign In',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
-        ),
-        backgroundColor: Colors.green[900],
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Form(
-            key: _formKey,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: ColorConstants.backgroundColor,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Tytuł ekranu
-                Text(
-                  'Welcome Back!',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber[600],
-                    letterSpacing: 2,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 40),
-
-                // Pole na nazwę użytkownika
-                TextFormField(
-                  controller: usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    labelStyle: TextStyle(color: Colors.amber[700]),
-                    hintText: 'Enter your username',
-                    hintStyle: TextStyle(color: Colors.grey[400]),
-                    filled: true,
-                    fillColor: Colors.grey[800],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.amber[700]!, width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.amber[700]!, width: 2),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a username';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-
-                // Pole na hasło
-                TextFormField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: TextStyle(color: Colors.amber[700]),
-                    hintText: 'Enter your password',
-                    hintStyle: TextStyle(color: Colors.grey[400]),
-                    filled: true,
-                    fillColor: Colors.grey[800],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.amber[700]!, width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.amber[700]!, width: 2),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 30),
-
-                // Przycisk logowania
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: Colors.green[800],
-                      foregroundColor: Colors.amber[700],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.amber[700]!, width: 2),
-                      ),
-                      elevation: 5, // Dodanie cienia przycisku
-                    ),
-                    onPressed: () => handleLogin(context),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-
-                // Przycisk do rejestracji
-                TextButton(
-                  onPressed: () {
-                    // Możesz dodać logikę dla przejścia do ekranu rejestracji
-                    NavigatorService.navigateTo(context, Register());
-                  },
+                SizedBox(height: 300),
+                Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
-                    'Don\'t have an account? Sign Up',
+                    'Login',
                     style: TextStyle(
-                      color: Colors.amber[700],
-                      fontSize: 16,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: ColorConstants.whiteColor,
                     ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                if (errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      errorMessage!,
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomFormInput(
+                        controller: usernameController,
+                        labelText: "Username",
+                        icon: Icons.person_outline,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a username';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      CustomFormInput(
+                        controller: passwordController,
+                        labelText: 'Password',
+                        obscureText: true,
+                        suffixIcon: Icons.visibility,
+                        onSuffixIconPressed: () {},
+                      ),
+                      SizedBox(height: 32),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 55,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorConstants.secondaryColor,
+                                  foregroundColor: ColorConstants.blackColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () => handleLogin(context),
+                                child: Text('Login'),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 55,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorConstants.primaryColor,
+                                  foregroundColor: ColorConstants.blackColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () => goToRegister(context),
+                                child: Text('Don\'t have an account? Sign Up'),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -182,4 +173,3 @@ class Login extends StatelessWidget {
     );
   }
 }
-

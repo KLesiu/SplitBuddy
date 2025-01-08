@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:split_buddy/stores/userStore.dart';
 import '../home/addbutton/add_page.dart';
 import 'friends/friends_page.dart';
 import 'groups/groups_page.dart';
 import 'notifications/notifications_page.dart';
 import 'profile/profile_page.dart';
-import '../layout/menu/menu.dart';
+import '../layout/menu.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
+
+
 }
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+  Future<void> _onItemTapped(int index) async {
     setState(() {
       _selectedIndex = index;
     });
   }
+
+
 
   List<Widget> _pages() {
     return [
