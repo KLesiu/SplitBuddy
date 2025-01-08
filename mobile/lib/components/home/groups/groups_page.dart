@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'add_group_widget.dart'; // Import nowego widżetu
 
 class GroupsPage extends StatefulWidget {
-  final Function(String, String) onGroupCreated;
 
-  const GroupsPage({Key? key, required this.onGroupCreated}) : super(key: key);
+  const GroupsPage({Key? key}) : super(key: key);
 
   @override
   _GroupsPageState createState() => _GroupsPageState();
@@ -23,12 +22,6 @@ class _GroupsPageState extends State<GroupsPage> {
       body: Column(
         children: [
           AddGroupWidget(
-            onGroupCreated: (groupName, groupType) {
-              setState(() {
-                _groups.add({'name': groupName, 'type': groupType});
-                widget.onGroupCreated(groupName, groupType);
-              });
-            },
           ),
           Expanded(
             child: Padding(
@@ -37,7 +30,7 @@ class _GroupsPageState extends State<GroupsPage> {
                   ? Center(
                 child: Text(
                   'No groups created yet.',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               )
                   : ListView.builder(

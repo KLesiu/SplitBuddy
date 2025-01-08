@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddGroupWidget extends StatefulWidget {
-  final Function(String, String) onGroupCreated;
-
-  const AddGroupWidget({Key? key, required this.onGroupCreated}) : super(key: key);
+  const AddGroupWidget({Key? key}) : super(key: key);
 
   @override
   _AddGroupWidgetState createState() => _AddGroupWidgetState();
@@ -37,14 +35,7 @@ class _AddGroupWidgetState extends State<AddGroupWidget> {
           SizedBox(height: 12),
           ElevatedButton(
             onPressed: () {
-              String groupName = _groupNameController.text;
-              String groupType = _groupTypeController.text;
 
-              if (groupName.isNotEmpty && groupType.isNotEmpty) {
-                widget.onGroupCreated(groupName, groupType);
-                _groupNameController.clear();
-                _groupTypeController.clear();
-              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFF4EA95F), // Zmieniono z 'primary'

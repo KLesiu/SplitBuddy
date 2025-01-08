@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'add_friend_widget.dart'; // Import nowego widżetu
+import 'add_friend_widget.dart';
 
 class FriendsPage extends StatefulWidget {
-  final Function(String) onFriendAdded;
-
-  const FriendsPage({Key? key, required this.onFriendAdded}) : super(key: key);
+  const FriendsPage({Key? key}) : super(key: key);
 
   @override
   _FriendsPageState createState() => _FriendsPageState();
@@ -23,12 +21,7 @@ class _FriendsPageState extends State<FriendsPage> {
       body: Column(
         children: [
           AddFriendWidget(
-            onFriendAdded: (friendName) {
-              setState(() {
-                _friends.add(friendName);
-                widget.onFriendAdded(friendName);
-              });
-            },
+
           ),
           Expanded(
             child: Padding(
