@@ -10,25 +10,13 @@ class _AddPageState extends State<AddPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _newFriendController = TextEditingController();
+  final TextEditingController _payingPersonController = TextEditingController();
   String _selectedCurrency = 'USD';
   String _selectedSplitMethod = 'Equally';
   List<String> _friends = ['Bartek', 'Antek', 'Kuba'];
   List<String> _selectedFriends = [];
-  DateTime? _selectedDate;
-
-  void _showDatePicker() async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
+  DateTime _selectedDate = DateTime.now(); // Domyślnie ustawiona na bieżącą datę
+  String? _selectedPayingPerson;
 
   void _addNewFriend() {
     if (_newFriendController.text.isNotEmpty) {
@@ -45,21 +33,21 @@ class _AddPageState extends State<AddPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text('Add New Friend'),
-        content: TextField(
-        controller: _newFriendController,
-        decoration: InputDecoration(hintText: 'Enter friends name'),
-        ),
-        actions: [
-        TextButton(
-        onPressed: () => Navigator.of(context).pop(),
-        child: Text('Cancel'),
-        ),
-        TextButton(
-        onPressed: _addNewFriend,
-        child: Text('Add'),
-        ),
-        ],
+          title: Text('Add New Friend'),
+          content: TextField(
+            controller: _newFriendController,
+            decoration: InputDecoration(hintText: 'Enter friends name'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: _addNewFriend,
+              child: Text('Add'),
+            ),
+          ],
         );
       },
     );
@@ -157,10 +145,9 @@ class _AddPageState extends State<AddPage> {
   void _addExpense() {
     if (_descriptionController.text.isNotEmpty &&
         _amountController.text.isNotEmpty &&
-        _selectedFriends.isNotEmpty) {
-      String formattedDate = _selectedDate != null
-          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
-          : 'No date selected';
+        _selectedFriends.isNotEmpty &&
+        _selectedPayingPerson != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -172,7 +159,7 @@ class _AddPageState extends State<AddPage> {
       _amountController.clear();
       _selectedFriends.clear();
       setState(() {
-        _selectedDate = null;
+        _selectedDate = DateTime.now(); // Resetowanie daty
       });
     }
   }
@@ -189,6 +176,36 @@ class _AddPageState extends State<AddPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(
+              onPressed: _showFriendSelectionDialog,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF4EA95F),
+                foregroundColor: Colors.black,
+              ),
+              child: Text('Select Friends'),
+            ),
+            SizedBox(height: 12),
+            // Display selected friends
+            if (_selectedFriends.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _selectedFriends.map((friend) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 8),
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF4EA95F),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    width: double.infinity, // Szerokość dopasowana do reszty formularza
+                    child: Text(
+                      friend,
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  );
+                }).toList(),
+              ),
+            SizedBox(height: 12),
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
@@ -225,22 +242,58 @@ class _AddPageState extends State<AddPage> {
               ),
             ),
             SizedBox(height: 12),
-            TextButton(
-              onPressed: _showDatePicker,
-              child: Text(
-                _selectedDate == null
-                    ? 'Select Date'
-                    : 'Selected Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+            // Kalendarz i data w jednym kontenerze
+            GestureDetector(
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (pickedDate != null) {
+                  setState(() {
+                    _selectedDate = pickedDate;
+                  });
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Color(0xFF4EA95F),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_today, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      DateFormat('yyyy-MM-dd').format(_selectedDate),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _showFriendSelectionDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4EA95F),
-                foregroundColor: Colors.black,
+            // Nowe pole z osobą płacącą jako Dropdown
+            DropdownButtonFormField<String>(
+              value: _selectedPayingPerson,
+              items: _selectedFriends.map((String friend) {
+                return DropdownMenuItem<String>(
+                  value: friend,
+                  child: Text(friend),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedPayingPerson = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Paying Person',
+                border: OutlineInputBorder(),
               ),
-              child: Text('Select Friends'),
             ),
             SizedBox(height: 12),
             ElevatedButton(
@@ -266,4 +319,3 @@ class _AddPageState extends State<AddPage> {
     );
   }
 }
-
