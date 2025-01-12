@@ -22,6 +22,8 @@ namespace SplitBuddy.Api
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<JwtService>();
+
 
             var jwtConfig = builder.Configuration.GetSection("JwtConfig");
             var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]);

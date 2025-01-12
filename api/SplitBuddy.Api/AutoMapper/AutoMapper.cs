@@ -10,8 +10,7 @@ namespace SplitBuddy.Api.AutoMapper
         {
             CreateMap<Group, GroupFormVm>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.Id))
-                .ForMember(d => d.Name, s => s.MapFrom(a => a.Name))
-                .ForMember(d => d.Owner, s => s.MapFrom(a => a.Owner));
+                .ForMember(d => d.Name, s => s.MapFrom(a => a.Name));
 
             CreateMap<User, UserFormVm>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.Id))
@@ -41,7 +40,12 @@ namespace SplitBuddy.Api.AutoMapper
                 .ForMember(d => d.Categories, s => s.MapFrom(s => s.Categories))
                 .ForMember(d => d.Group, s => s.MapFrom(s => s.Group));
 
-           
+
+            CreateMap<GroupMembership, GroupFormVm>()
+              .ForMember(d => d.Id, s => s.MapFrom(a => a.Group.Id))
+              .ForMember(d => d.Name, s => s.MapFrom(a => a.Group.Name));
+
+
 
         }
     }

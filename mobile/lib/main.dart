@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/login/login.dart';
+import 'package:split_buddy/components/preload/preload.dart';
 import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/stores/userStore.dart';
 import 'components/home/home.dart';
@@ -19,9 +19,10 @@ class App extends StatelessWidget {
 
   Future<Widget> validateToken() async {
     var response = await httpService.get("/api/User/checkToken");
+    if(response?.statusCode == 400) return Preload();
     var result = response?.body;
     if (result == null || result == HttpResponses.unauthorized.message) {
-      return Login();
+      return Preload();
     }
     return Home();
   }

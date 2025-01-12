@@ -9,10 +9,12 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GroupController(AppDbContext context, IMapper mapper) : ControllerBase
+    public class GroupController(AppDbContext context, IMapper mapper, JwtService jwtService) : ControllerBase
     {
         private readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
+        private readonly JwtService _jwtService = jwtService;
+
 
         [HttpGet("getGroup/{groupId}")]
         public async Task<GroupFormVm> Get(int groupId)
@@ -22,10 +24,12 @@ namespace SplitBuddy.Api.Controllers
         }
 
         [HttpPost("createGroup")]
-        public async Task<int?> Create([FromBody] GroupFormVm form)
+        public async Task<int?> Create([FromHeader] string Authorization,[FromBody] GroupFormVm form)
 
         {
-            var user =  await _context.Users.SingleOrDefaultAsync(u=>u.Id == form.Owner.Id);
+            var tokenInfo = _jwtService.DecodeJwtToken(Authorization);
+            var userId = tokenInfo.UserId;
+            var user =  await _context.Users.SingleOrDefaultAsync(u=>u.Id == userId);
             if (user is null) return null;
             var newGroup = new Group
             {
@@ -36,6 +40,8 @@ namespace SplitBuddy.Api.Controllers
             };
 
             _context.Groups.Add(newGroup);
+            var groupMemberShipForm = new GroupMembership { Group=newGroup,User=user};
+            _context.GroupMembership.Add(groupMemberShipForm);
             await _context.SaveChangesAsync();
             return newGroup.Id;
 
@@ -49,6 +55,24 @@ namespace SplitBuddy.Api.Controllers
             group.Name = form.Name;
             await _context.SaveChangesAsync();
             return group.Id;
+        }
+
+        [HttpGet("getAllUserGroups")]
+        public async Task<List<GroupFormVm>?> GetAllUserGroups([FromHeader] string Authorization)
+        {
+            var tokenInfo = _jwtService.DecodeJwtToken(Authorization);
+            var userId = tokenInfo.UserId;
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user is null) return null;
+            var userGroups = await _context.GroupMembership
+               .Where(gm => gm.User.Id == userId) 
+               .Include(gm => gm.Group)          
+               .Select(gm => gm.Group)          
+               .ToListAsync();
+
+            if (userGroups == null || userGroups.Count == 0) return null;
+
+            return _mapper.Map<List<GroupFormVm>>(userGroups);
         }
 
 

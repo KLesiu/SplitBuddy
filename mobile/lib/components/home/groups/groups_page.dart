@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../services/httpService.dart';
 import 'add_group_widget.dart';
+import 'dart:convert';
 
 class GroupsPage extends StatefulWidget {
   const GroupsPage({Key? key}) : super(key: key);
@@ -9,12 +11,24 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  List<Map<String, String>> _groups = [];
+  final HttpService httpService = HttpService();
+  List<Map<String, dynamic>> groups = [];
 
-  void _addGroup(String groupName, String groupType) {
-    setState(() {
-      _groups.add({'name': groupName, 'type': groupType});
-    });
+  void getGroups() async {
+    var response = await httpService.get("/api/Group/getAllUserGroups");
+    if(response == null)return;
+    var result = jsonDecode(response.body);
+    if (result != null && result is List) {
+      setState(() {
+        groups = List<Map<String, dynamic>>.from(result as Iterable);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getGroups();
   }
 
   @override
@@ -27,12 +41,12 @@ class _GroupsPageState extends State<GroupsPage> {
       body: Column(
         children: [
           AddGroupWidget(
-            onGroupCreated: _addGroup,
+            onGroupCreated: getGroups,
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: _groups.isEmpty
+              child: groups.isEmpty
                   ? Center(
                 child: Text(
                   'No groups created yet.',
@@ -40,7 +54,7 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
               )
                   : ListView.builder(
-                itemCount: _groups.length,
+                itemCount: groups.length,
                 itemBuilder: (context, index) {
                   return Card(
                     color: Color(0xFF4EA95F),
@@ -53,12 +67,8 @@ class _GroupsPageState extends State<GroupsPage> {
                         child: Icon(Icons.group, color: Colors.black),
                       ),
                       title: Text(
-                        _groups[index]['name']!,
+                        groups[index]['name'],
                         style: TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                      subtitle: Text(
-                        'Type: ${_groups[index]['type']}',
-                        style: TextStyle(fontSize: 14, color: Colors.black54),
                       ),
                     ),
                   );
@@ -71,78 +81,3 @@ class _GroupsPageState extends State<GroupsPage> {
     );
   }
 }
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'add_group_widget.dart'; // Import nowego widżetu
-//
-// class GroupsPage extends StatefulWidget {
-//
-//   const GroupsPage({Key? key}) : super(key: key);
-//
-//   @override
-//   _GroupsPageState createState() => _GroupsPageState();
-// }
-//
-// class _GroupsPageState extends State<GroupsPage> {
-//   List<Map<String, String>> _groups = [];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Color(0xFF4EA95F),
-//         title: Text('Groups'),
-//       ),
-//       body: Column(
-//         children: [
-//           AddGroupWidget(
-//           ),
-//           Expanded(
-//             child: Padding(
-//               padding: const EdgeInsets.all(16.0),
-//               child: _groups.isEmpty
-//                   ? Center(
-//                 child: Text(
-//                   'No groups created yet.',
-//                   style: TextStyle(fontSize: 16, color: Colors.black),
-//                 ),
-//               )
-//                   : ListView.builder(
-//                 itemCount: _groups.length,
-//                 itemBuilder: (context, index) {
-//                   return Card(
-//                     color: Color(0xFF4EA95F),
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                     child: ListTile(
-//                       leading: CircleAvatar(
-//                         backgroundColor: Color(0xFFC4A663),
-//                         child: Icon(Icons.group, color: Colors.black),
-//                       ),
-//                       title: Text(
-//                         _groups[index]['name']!,
-//                         style: TextStyle(fontSize: 16, color: Colors.black),
-//                       ),
-//                       subtitle: Text(
-//                         'Type: ${_groups[index]['type']}',
-//                         style: TextStyle(fontSize: 14, color: Colors.black54),
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-//
-//

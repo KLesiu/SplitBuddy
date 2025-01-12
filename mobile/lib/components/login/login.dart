@@ -22,7 +22,6 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final String? apiUrl = dotenv.env['API_URL'];
   final HttpService httpService = HttpService();
 
   String? errorMessage;

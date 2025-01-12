@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-class AddGroupWidget extends StatelessWidget {
-  final Function(String, String) onGroupCreated;
+import '../../../services/httpService.dart';
 
-  const AddGroupWidget({Key? key, required this.onGroupCreated}) : super(key: key);
+class AddGroupWidget extends StatelessWidget {
+  final Function() onGroupCreated;
+  final HttpService httpService = HttpService();
+
+  AddGroupWidget({Key? key, required this.onGroupCreated}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +26,19 @@ class AddGroupWidget extends StatelessWidget {
   }
 
   void _showCreateGroupDialog(BuildContext context) {
-    final TextEditingController _groupNameController = TextEditingController();
-    final TextEditingController _groupTypeController = TextEditingController();
+    final TextEditingController groupNameController = TextEditingController();
 
+
+    void createGroup(context) async{
+      var body = {
+        "name": groupNameController.text,
+      };
+      var response = await httpService.post("/api/Group/createGroup", body);
+      var result = response?.body;
+      if(result==null)return;
+      Navigator.of(context).pop();
+      onGroupCreated();
+    }
     showDialog(
       context: context,
       builder: (context) {
@@ -35,18 +48,10 @@ class AddGroupWidget extends StatelessWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: _groupNameController,
+              TextFormField(
+                controller: groupNameController,
                 decoration: InputDecoration(
                   labelText: 'Group Name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: _groupTypeController,
-                decoration: InputDecoration(
-                  labelText: 'Group Type',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -64,16 +69,7 @@ class AddGroupWidget extends StatelessWidget {
                 backgroundColor: Color(0xFF4EA95F),
                 foregroundColor: Colors.black,
               ),
-              onPressed: () {
-                if (_groupNameController.text.isNotEmpty &&
-                    _groupTypeController.text.isNotEmpty) {
-                  onGroupCreated(
-                    _groupNameController.text,
-                    _groupTypeController.text,
-                  );
-                }
-                Navigator.of(context).pop();
-              },
+              onPressed: ()=>createGroup(context),
               child: Text('Create Group'),
             ),
           ],
@@ -83,55 +79,3 @@ class AddGroupWidget extends StatelessWidget {
   }
 }
 
-
-
-// import 'package:flutter/material.dart';
-//
-// class AddGroupWidget extends StatefulWidget {
-//   const AddGroupWidget({Key? key}) : super(key: key);
-//
-//   @override
-//   _AddGroupWidgetState createState() => _AddGroupWidgetState();
-// }
-//
-// class _AddGroupWidgetState extends State<AddGroupWidget> {
-//   TextEditingController _groupNameController = TextEditingController();
-//   TextEditingController _groupTypeController = TextEditingController();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: Column(
-//         children: [
-//           TextField(
-//             controller: _groupNameController,
-//             decoration: InputDecoration(
-//               labelText: 'Group Name',
-//               border: OutlineInputBorder(),
-//             ),
-//           ),
-//           SizedBox(height: 12),
-//           TextField(
-//             controller: _groupTypeController,
-//             decoration: InputDecoration(
-//               labelText: 'Group Type',
-//               border: OutlineInputBorder(),
-//             ),
-//           ),
-//           SizedBox(height: 12),
-//           ElevatedButton(
-//             onPressed: () {
-//
-//             },
-//             style: ElevatedButton.styleFrom(
-//               backgroundColor: Color(0xFF4EA95F), // Zmieniono z 'primary'
-//               foregroundColor: Colors.black, // Zmieniono z 'onPrimary'
-//             ),
-//             child: Text('Create Group'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

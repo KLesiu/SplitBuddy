@@ -6,6 +6,7 @@ using SplitBuddy.Api.Models.Api;
 using SplitBuddy.Api.Models.Entities;
 using SplitBuddy.Api.Services;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -13,11 +14,13 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController(AppDbContext context, PasswordHasher passwordHasher, IConfiguration configuration) : ControllerBase
+    public class UserController(AppDbContext context, PasswordHasher passwordHasher, IConfiguration configuration, JwtService jwtService) : ControllerBase
     {
         private readonly PasswordHasher _passwordHasher = passwordHasher;
         private readonly AppDbContext _context = context;
         private readonly IConfiguration _configuration = configuration;
+        private readonly JwtService _jwtService = jwtService;
+
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginFormVm request)
@@ -67,29 +70,14 @@ namespace SplitBuddy.Api.Controllers
         [HttpGet("checkToken")]
         public IActionResult CheckToken([FromHeader] string Authorization)
         {
-            if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
-            {
-                return Unauthorized(Responses.UNAUTHORIZED); 
-            }
 
-            var token = Authorization.Substring("Bearer ".Length).Trim();
-
-            var result = DecodeJwtToken(token);
+            var result = _jwtService.DecodeJwtToken(Authorization);
 
             if (!result.IsValid)
             {
-                return Unauthorized(Responses.UNAUTHORIZED);  
-            }
-
-            if (int.TryParse(result.UserId, out int userId))
-            {
-                return Ok(new {  result.Role, result.Username, userId });
-            }
-            else
-            {
                 return Unauthorized(Responses.UNAUTHORIZED);
-
             }
+            return Ok(new { result.Role, result.Username, result.UserId });
 
         }
 
@@ -112,46 +100,11 @@ namespace SplitBuddy.Api.Controllers
                 issuer: jwtConfig["Issuer"],
                 audience: jwtConfig["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtConfig["TokenValidityMins"])),  
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtConfig["TokenValidityMins"])),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private (bool IsValid,  string Role, string Username,string UserId) DecodeJwtToken(string token)
-        {
-            var jwtConfig = _configuration.GetSection("JwtConfig");
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtConfig["Issuer"],
-                ValidAudience = jwtConfig["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]))
-            };
-
-            try
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-
-                if (validatedToken is JwtSecurityToken jwtToken)
-                {
-                    var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                    var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-                    var userId = principal.Claims.FirstOrDefault(c => c.Type == "user_id")?.Value;
-
-                    return (true, role, username, userId);
-                }
-
-                return (false, null,  null, null);
-            }
-            catch (Exception)
-            {
-                return (false, null,  null,null);
-            }
-        }
     }
 }

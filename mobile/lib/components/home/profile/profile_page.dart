@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components//login/login.dart'; // Importujemy ekran logowania
+import 'package:split_buddy/components/preload/preload.dart';
+import '../../../services/navigatorService.dart';
+import '../../../stores/userStore.dart';
 
 class ProfilePage extends StatelessWidget {
+  final UserStore userStore = UserStore();
+
+  void logout(context) async{
+      await userStore.clearUser();
+      NavigatorService.navigateTo(context, Preload());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,11 +21,7 @@ class ProfilePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.exit_to_app, size: 30, color: Colors.amber[700]),
             onPressed: () {
-              // Akcja przycisku wylogowania - przekierowanie na ekran logowania
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
+              logout(context);
             },
           ),
         ],
@@ -30,25 +35,3 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
-
-
-
-// import 'package:flutter/material.dart';
-//
-// class ProfilePage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Color(0xFF4EA95F),
-//         title: Text('Profile'),
-//       ),
-//       body: Center(
-//         child: Text(
-//           'Profile content here',
-//           style: TextStyle(color: Colors.white, fontSize: 18),
-//         ),
-//       ),
-//     );
-//   }
-// }
