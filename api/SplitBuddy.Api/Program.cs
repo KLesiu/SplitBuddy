@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,21 +13,19 @@ namespace SplitBuddy.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
             builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            // Add services to the container.
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddControllers();
             builder.Services.AddSingleton<PasswordHasher>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            var key = Encoding.UTF8.GetBytes("YourSecretKeyHere");
+
+            var jwtConfig = builder.Configuration.GetSection("JwtConfig");
+            var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]);
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -38,8 +35,8 @@ namespace SplitBuddy.Api
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = "yourIssuer",
-                        ValidAudience = "yourAudience",
+                        ValidIssuer = jwtConfig["Issuer"],
+                        ValidAudience = jwtConfig["Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(key)
                     };
                 });
@@ -48,17 +45,14 @@ namespace SplitBuddy.Api
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

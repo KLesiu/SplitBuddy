@@ -65,14 +65,45 @@ namespace SplitBuddy.Api.Controllers
             return Ok(Responses.SUCCESS);
         }
 
+        [HttpGet("checkToken")]
+        public IActionResult DecodeToken([FromHeader] string Authorization)
+        {
+            if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+            {
+                return Unauthorized(Responses.UNAUTHORIZED); 
+            }
+
+            var token = Authorization.Substring("Bearer ".Length).Trim();
+
+            var result = DecodeJwtToken(token);
+
+            if (!result.IsValid)
+            {
+                return Unauthorized(Responses.UNAUTHORIZED);  
+            }
+
+            if (int.TryParse(result.UserId, out int userId))
+            {
+                return Ok(new { result.Id, result.Role, result.Username, userId });
+            }
+            else
+            {
+                return Unauthorized(Responses.UNAUTHORIZED);
+
+            }
+
+        }
+
+
 
         private string GenerateJwtToken(User user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(ClaimTypes.NameIdentifier, user.Username),
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("user_id",user.Id.ToString())
             };
 
             var jwtConfig = _configuration.GetSection("JwtConfig");
@@ -88,7 +119,42 @@ namespace SplitBuddy.Api.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        private (bool IsValid, string Id, string Role, string Username,string UserId) DecodeJwtToken(string token)
+        {
+            var jwtConfig = _configuration.GetSection("JwtConfig");
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtConfig["Issuer"],
+                ValidAudience = jwtConfig["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]))
+            };
+
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+
+                if (validatedToken is JwtSecurityToken jwtToken)
+                {
+                    var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                    var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                    var id = principal.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                    var userId = principal.Claims.FirstOrDefault(c => c.Type == "user_id")?.Value;
+
+                    return (true, id, role, username, userId);
+                }
+
+                return (false, null, null, null, null);
+            }
+            catch (Exception)
+            {
+                return (false, null, null, null,null);
+            }
+        }
     }
 }
-
-
