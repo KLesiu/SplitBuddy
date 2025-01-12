@@ -30,7 +30,8 @@ class _LoginState extends State<Login> {
   void handleLogin(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       var response = await submit();
-      var result = response.body;
+      var result = response?.body;
+      if(result == null)return;
       if (result != HttpResponses.unauthorized.message) {
         setState(() {
           errorMessage = null;
@@ -48,7 +49,7 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<http.Response> submit() async {
+  Future<http.Response?> submit() async {
     var body = {
       "username": usernameController.text,
       "password": passwordController.text,

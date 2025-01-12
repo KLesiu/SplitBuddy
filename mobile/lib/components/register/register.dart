@@ -28,8 +28,8 @@ class _RegisterState extends State<Register> {
   void handleRegister(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       var response = await submit();
-      var result = response.body;
-
+      var result = response?.body;
+      if(result == null)return;
       if (result == HttpResponses.success.message) {
         NavigatorService.navigateTo(context, Login());
       } else {
@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  Future<http.Response> submit() async {
+  Future<http.Response?> submit() async {
     var body = {
       'username': usernameController.text,
       'password': passwordController.text,

@@ -64,9 +64,8 @@ namespace SplitBuddy.Api.Controllers
             await _context.SaveChangesAsync();
             return Ok(Responses.SUCCESS);
         }
-
         [HttpGet("checkToken")]
-        public IActionResult DecodeToken([FromHeader] string Authorization)
+        public IActionResult CheckToken([FromHeader] string Authorization)
         {
             if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
             {
@@ -84,7 +83,7 @@ namespace SplitBuddy.Api.Controllers
 
             if (int.TryParse(result.UserId, out int userId))
             {
-                return Ok(new { result.Id, result.Role, result.Username, userId });
+                return Ok(new {  result.Role, result.Username, userId });
             }
             else
             {
@@ -102,7 +101,6 @@ namespace SplitBuddy.Api.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Username),
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("user_id",user.Id.ToString())
             };
 
@@ -114,13 +112,13 @@ namespace SplitBuddy.Api.Controllers
                 issuer: jwtConfig["Issuer"],
                 audience: jwtConfig["Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(double.Parse(jwtConfig["TokenValidityMins"])),
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtConfig["TokenValidityMins"])),  
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private (bool IsValid, string Id, string Role, string Username,string UserId) DecodeJwtToken(string token)
+        private (bool IsValid,  string Role, string Username,string UserId) DecodeJwtToken(string token)
         {
             var jwtConfig = _configuration.GetSection("JwtConfig");
             var validationParameters = new TokenValidationParameters
@@ -143,17 +141,16 @@ namespace SplitBuddy.Api.Controllers
                 {
                     var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                     var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-                    var id = principal.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
                     var userId = principal.Claims.FirstOrDefault(c => c.Type == "user_id")?.Value;
 
-                    return (true, id, role, username, userId);
+                    return (true, role, username, userId);
                 }
 
-                return (false, null, null, null, null);
+                return (false, null,  null, null);
             }
             catch (Exception)
             {
-                return (false, null, null, null,null);
+                return (false, null,  null,null);
             }
         }
     }
