@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AddPage extends StatefulWidget {
+class PaymentPage extends StatefulWidget {
   @override
-  _AddPageState createState() => _AddPageState();
+  _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _AddPageState extends State<AddPage> {
+class _PaymentPageState extends State<PaymentPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _newFriendController = TextEditingController();
@@ -15,7 +15,7 @@ class _AddPageState extends State<AddPage> {
   String _selectedSplitMethod = 'Equally';
   List<String> _friends = ['Bartek', 'Antek', 'Kuba'];
   List<String> _selectedFriends = [];
-  DateTime _selectedDate = DateTime.now(); // Domyślnie ustawiona na bieżącą datę
+  DateTime _selectedDate = DateTime.now();
   String? _selectedPayingPerson;
 
   void _addNewFriend() {

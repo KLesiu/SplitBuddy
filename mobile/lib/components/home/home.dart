@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/stores/userStore.dart';
-import '../home/addbutton/add_page.dart';
+import 'package:split_buddy/components/home/payment/payment_page.dart';
 import 'friends/friends_page.dart';
 import 'groups/groups_page.dart';
 import 'notifications/notifications_page.dart';
@@ -29,7 +28,7 @@ class _HomeState extends State<Home> {
     return [
       GroupsPage(),
       FriendsPage(),
-      AddPage(),
+      PaymentPage(),
       NotificationsPage(),
       ProfilePage(),
     ];
