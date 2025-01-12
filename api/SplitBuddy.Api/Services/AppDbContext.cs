@@ -14,6 +14,8 @@ namespace SplitBuddy.Api.Services
         public required DbSet<Payment> Payments { get; set; }
 
         public required DbSet<PaymentSplits> PaymentSplits { get; set; }
+
+        public required DbSet<Friendship> Friendships { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
