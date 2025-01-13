@@ -39,7 +39,7 @@ class Menu extends StatelessWidget {
               color: Color(0xFFBC9D5A),
               shape: BoxShape.circle, // Ustawienie okrągłego kształtu
             ),
-            child: Icon(Icons.add, color: Colors.black, size: 32),
+            child: Icon(Icons.add, color: Colors.black, size: 36,),
           ),
           label: '',
         ),
