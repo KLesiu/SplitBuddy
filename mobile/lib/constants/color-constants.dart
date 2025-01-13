@@ -2,6 +2,7 @@ import 'dart:ui';
 
 class ColorConstants{
   static Color backgroundColor = const Color.fromRGBO(19, 19, 19, 1);
+  static Color homeBackgroundColor = const Color.fromRGBO(37, 37, 37, 1.0);
   static Color primaryColor = const Color.fromRGBO(255, 213, 133, 1);
   static Color secondaryColor = const Color.fromRGBO(79, 170, 96, 1);
   static Color whiteColor = const Color.fromRGBO(255, 255, 255, 1);
