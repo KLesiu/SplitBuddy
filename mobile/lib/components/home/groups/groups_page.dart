@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../services/httpService.dart';
 import 'add_group_widget.dart';
+import 'edit_group_widget.dart';
 import 'dart:convert';
 
 class GroupsPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _GroupsPageState extends State<GroupsPage> {
 
   void getGroups() async {
     var response = await httpService.get("/api/Group/getAllUserGroups");
-    if(response == null)return;
+    if (response == null) return;
     var result = jsonDecode(response.body);
     if (result != null && result is List) {
       setState(() {
@@ -29,6 +30,14 @@ class _GroupsPageState extends State<GroupsPage> {
   void initState() {
     super.initState();
     getGroups();
+  }
+
+  void _navigateToEditGroup(String groupName) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditGroupWidget(groupName: groupName),
+      ),
+    );
   }
 
   @override
@@ -68,8 +77,10 @@ class _GroupsPageState extends State<GroupsPage> {
                       ),
                       title: Text(
                         groups[index]['name'],
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style:
+                        TextStyle(fontSize: 16, color: Colors.black),
                       ),
+                      onTap: () => _navigateToEditGroup(groups[index]['name']),
                     ),
                   );
                 },
@@ -81,3 +92,4 @@ class _GroupsPageState extends State<GroupsPage> {
     );
   }
 }
+

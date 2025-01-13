@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_buddy/constants/color-constants.dart';
 
 import '../../../services/httpService.dart';
 
@@ -17,7 +18,7 @@ class AddGroupWidget extends StatelessWidget {
           _showCreateGroupDialog(context);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF4EA95F),
+          backgroundColor:  ColorConstants.secondaryColor,
           foregroundColor: Colors.black,
         ),
         child: Text('Create New Group'),
