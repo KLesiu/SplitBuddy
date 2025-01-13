@@ -37,6 +37,7 @@ class Menu extends StatelessWidget {
             height: 52,
             decoration: BoxDecoration(
               color: Color(0xFFBC9D5A),
+              shape: BoxShape.circle, // Ustawienie okrągłego kształtu
             ),
             child: Icon(Icons.add, color: Colors.black, size: 32),
           ),
