@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../../../services/httpService.dart';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -7,28 +11,46 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  final HttpService httpService = HttpService();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _newFriendController = TextEditingController();
   final TextEditingController _payingPersonController = TextEditingController();
-  String _selectedCurrency = 'USD';
-  String _selectedSplitMethod = 'Equally';
-  List<String> _friends = ['Bartek', 'Antek', 'Kuba'];
-  List<String> _selectedFriends = [];
-  DateTime _selectedDate = DateTime.now();
+  String selectedCurrency = 'USD';
+  String selectedSplitMethod = 'Equally';
+  List<String> friends = ['Bartek', 'Antek', 'Kuba'];
+  List<Map<String, dynamic>> groups = [];
+
+
+  List<String> selectedFriends = [];
+  List<Map<String, dynamic>> selectedGroups = [];
+
+  DateTime selectedDate = DateTime.now();
   String? _selectedPayingPerson;
 
-  void _addNewFriend() {
+
+  Future<void> getGroups() async {
+    var response = await httpService.get("/api/Group/getAllUserGroups");
+    if (response == null) return;
+    var result = jsonDecode(response.body);
+    if (result != null && result is List) {
+      setState(() {
+        groups = List<Map<String, dynamic>>.from(result as Iterable);
+      });
+    }
+  }
+
+  void addNewFriend() {
     if (_newFriendController.text.isNotEmpty) {
       setState(() {
-        _friends.add(_newFriendController.text);
+        friends.add(_newFriendController.text);
         _newFriendController.clear();
       });
       Navigator.of(context).pop();
     }
   }
 
-  void _showAddFriendDialog() {
+  void showAddFriendDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -44,7 +66,7 @@ class _PaymentPageState extends State<PaymentPage> {
               child: Text('Cancel'),
             ),
             TextButton(
-              onPressed: _addNewFriend,
+              onPressed: addNewFriend,
               child: Text('Add'),
             ),
           ],
@@ -53,46 +75,97 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  void _showFriendSelectionDialog() {
+  void showGroupSelectionDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Friends'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ..._friends.map((friend) => CheckboxListTile(
-                title: Text(friend),
-                value: _selectedFriends.contains(friend),
-                onChanged: (bool? selected) {
-                  setState(() {
-                    if (selected == true) {
-                      _selectedFriends.add(friend);
-                    } else {
-                      _selectedFriends.remove(friend);
-                    }
-                  });
-                },
-              )),
-              TextButton(
-                onPressed: _showAddFriendDialog,
-                child: Text('Add New Friend'),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setDialogState) {
+            return AlertDialog(
+              title: Text('Select Group'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: groups.map((group) {
+                  return RadioListTile<Map<String, dynamic>>(
+                    title: Text(group["name"]),
+                    value: group,
+                    groupValue: selectedGroups.isNotEmpty
+                        ? selectedGroups[0]
+                        : null,
+                    onChanged: (Map<String, dynamic>? selectedGroup) {
+                      setDialogState(() {
+                        selectedGroups =
+                        selectedGroup != null ? [selectedGroup] : [];
+                      });
+                    },
+                  );
+                }).toList(),
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Close'),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {}); // Odśwież widżet główny po zamknięciu dialogu
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
-  void _showSplitMethodDialog() {
+
+  void showFriendSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setDialogState) {
+            return AlertDialog(
+              title: Text('Select Friends'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...friends.map((friend) {
+                    bool isSelected = selectedFriends.contains(friend);
+                    return CheckboxListTile(
+                      title: Text(friend),
+                      value: isSelected,
+                      onChanged: (bool? selected) {
+                        setDialogState(() {
+                          if (selected == true) {
+                            selectedFriends.add(friend);
+                          } else {
+                            selectedFriends.remove(friend);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                  TextButton(
+                    onPressed: showAddFriendDialog,
+                    child: Text('Add New Friend'),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+  void showSplitMethodDialog() {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -112,7 +185,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 title: Text('Equally'),
                 onTap: () {
                   setState(() {
-                    _selectedSplitMethod = 'Equally';
+                    selectedSplitMethod = 'Equally';
                   });
                   Navigator.of(context).pop();
                 },
@@ -121,7 +194,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 title: Text('By Percentage'),
                 onTap: () {
                   setState(() {
-                    _selectedSplitMethod = 'By Percentage';
+                    selectedSplitMethod = 'By Percentage';
                   });
                   Navigator.of(context).pop();
                 },
@@ -130,7 +203,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 title: Text('Exact Amounts'),
                 onTap: () {
                   setState(() {
-                    _selectedSplitMethod = 'Exact Amounts';
+                    selectedSplitMethod = 'Exact Amounts';
                   });
                   Navigator.of(context).pop();
                 },
@@ -142,26 +215,34 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  void _addExpense() {
+  void addExpense() {
     if (_descriptionController.text.isNotEmpty &&
         _amountController.text.isNotEmpty &&
-        _selectedFriends.isNotEmpty &&
+        selectedFriends.isNotEmpty &&
         _selectedPayingPerson != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Expense added: ${_descriptionController.text}, Amount: ${_amountController.text} $_selectedCurrency, Date: $formattedDate, Split: $_selectedSplitMethod'),
+              'Expense added: ${_descriptionController
+                  .text}, Amount: ${_amountController
+                  .text} $selectedCurrency, Date: $formattedDate, Split: $selectedSplitMethod'),
         ),
       );
       _descriptionController.clear();
       _amountController.clear();
-      _selectedFriends.clear();
+      selectedFriends.clear();
       setState(() {
-        _selectedDate = DateTime.now(); // Resetowanie daty
+        selectedDate = DateTime.now(); // Resetowanie daty
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getGroups();
   }
 
   @override
@@ -177,35 +258,44 @@ class _PaymentPageState extends State<PaymentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ElevatedButton(
-              onPressed: _showFriendSelectionDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4EA95F),
-                foregroundColor: Colors.black,
-              ),
-              child: Text('Select Friends'),
+              onPressed: showGroupSelectionDialog,
+              child: Text('Select Group'),
             ),
             SizedBox(height: 12),
-            // Display selected friends
-            if (_selectedFriends.isNotEmpty)
+            if (selectedGroups.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: _selectedFriends.map((friend) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 8),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF4EA95F),
-                      borderRadius: BorderRadius.circular(8),
+                children: [
+                  Text(
+                    'Selected Group: ${selectedGroups[0]["name"]}',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: showFriendSelectionDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF4EA95F),
+                      foregroundColor: Colors.black,
                     ),
-                    width: double.infinity, // Szerokość dopasowana do reszty formularza
-                    child: Text(
-                      friend,
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    child: Text('Select Friends'),
+                  ),
+                  SizedBox(height: 12),
+                  if (selectedFriends.isNotEmpty)
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children: selectedFriends.map((friend) {
+                        return Chip(
+                          label: Text(friend),
+                          backgroundColor: Color(0xFF4EA95F),
+                          labelStyle: TextStyle(color: Colors.white),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
+                ],
               ),
             SizedBox(height: 12),
+            // Reszta widżetów
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
@@ -224,7 +314,7 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _selectedCurrency,
+              value: selectedCurrency,
               items: ['USD', 'EUR', 'PLN'].map((String currency) {
                 return DropdownMenuItem<String>(
                   value: currency,
@@ -233,7 +323,7 @@ class _PaymentPageState extends State<PaymentPage> {
               }).toList(),
               onChanged: (String? value) {
                 setState(() {
-                  _selectedCurrency = value!;
+                  selectedCurrency = value!;
                 });
               },
               decoration: InputDecoration(
@@ -242,18 +332,17 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
             ),
             SizedBox(height: 12),
-            // Kalendarz i data w jednym kontenerze
             GestureDetector(
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
                   context: context,
-                  initialDate: _selectedDate,
+                  initialDate: selectedDate,
                   firstDate: DateTime(2000),
                   lastDate: DateTime(2100),
                 );
                 if (pickedDate != null) {
                   setState(() {
-                    _selectedDate = pickedDate;
+                    selectedDate = pickedDate;
                   });
                 }
               },
@@ -268,54 +357,17 @@ class _PaymentPageState extends State<PaymentPage> {
                     Icon(Icons.calendar_today, color: Colors.white),
                     SizedBox(width: 8),
                     Text(
-                      DateFormat('yyyy-MM-dd').format(_selectedDate),
+                      DateFormat('yyyy-MM-dd').format(selectedDate),
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 12),
-            // Nowe pole z osobą płacącą jako Dropdown
-            DropdownButtonFormField<String>(
-              value: _selectedPayingPerson,
-              items: _selectedFriends.map((String friend) {
-                return DropdownMenuItem<String>(
-                  value: friend,
-                  child: Text(friend),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  _selectedPayingPerson = value;
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Paying Person',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _showSplitMethodDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4EA95F),
-                foregroundColor: Colors.black,
-              ),
-              child: Text('Choose Split Method'),
-            ),
-            SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _addExpense,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4EA95F),
-                foregroundColor: Colors.black,
-              ),
-              child: Text('Add Expense'),
-            ),
           ],
         ),
       ),
     );
   }
+
 }

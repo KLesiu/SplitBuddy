@@ -3,6 +3,6 @@
     public class FriendFormVm
     {
 
-        public int FriendId { get; set; }
+        public required string Email { get; set; }
     }
 }

@@ -1,111 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:split_buddy/constants/color-constants.dart';
 
+import '../../../services/httpService.dart';
+
 class EditGroupWidget extends StatefulWidget {
   final String groupName;
+  final int groupId;
 
-  EditGroupWidget({Key? key, required this.groupName}) : super(key: key);
+  EditGroupWidget({Key? key, required this.groupName, required this.groupId})
+      : super(key: key);
 
   @override
   _EditGroupWidgetState createState() => _EditGroupWidgetState();
 }
 
 class _EditGroupWidgetState extends State<EditGroupWidget> {
-  List<Map<String, dynamic>> _expenses = [];
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  String _selectedCurrency = 'USD';
+  List<Map<String, dynamic>> expenses = [];
+  final HttpService httpService = HttpService();
 
-  void _addExpense() {
-    if (_descriptionController.text.isNotEmpty && _amountController.text.isNotEmpty) {
-      setState(() {
-        _expenses.add({
-          'description': _descriptionController.text,
-          'amount': double.tryParse(_amountController.text) ?? 0.0,
-          'currency': _selectedCurrency,
-        });
-      });
-      _descriptionController.clear();
-      _amountController.clear();
-      Navigator.of(context).pop();
-    }
+
+  void addNewExpenseInGroup(context){
+
   }
 
-  void _showAddExpenseDialog() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Add New Expense',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                value: _selectedCurrency,
-                items: ['USD', 'EUR', 'PLN'].map((String currency) {
-                  return DropdownMenuItem<String>(
-                    value: currency,
-                    child: Text(currency),
-                  );
-                }).toList(),
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedCurrency = value!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Currency',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _addExpense,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorConstants.secondaryColor,
-                  foregroundColor: Colors.black,
-                ),
-                child: Text('Add Expense'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  Future<void> getMemberships() async{
+    var body = {
+      "groupId":widget.groupId
+    };
+    var response = await httpService.post("/api/GroupMembership/getGroupMemberships",body);
+    if(response == null)return;
+    var result = response.body;
+    print(result);
+    if(result == null)return;
+
   }
 
+  Future<void> getExpensesInsideGroup() async{
+    var body = {
+      "groupId":widget.groupId
+    };
+    var response = await httpService.post("/api/Payment/getPaymentsInsideGroup",body);
+    if(response == null)return;
+    var result = response.body;
+    if(result == null)return;
+    setState(() {
+      expenses = List<Map<String, dynamic>>.from(result as Iterable);
+    });  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    getExpensesInsideGroup();
+    getMemberships();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +67,7 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ElevatedButton(
-              onPressed: _showAddExpenseDialog,
+              onPressed:()=>addNewExpenseInGroup(context) ,
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstants.secondaryColor,
                 foregroundColor: Colors.black,
@@ -132,7 +80,7 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Expanded(
-              child: _expenses.isEmpty
+              child: expenses.isEmpty
                   ? Center(
                 child: Text(
                   'No expenses added yet.',
@@ -140,9 +88,9 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
                 ),
               )
                   : ListView.builder(
-                itemCount: _expenses.length,
+                itemCount: expenses.length,
                 itemBuilder: (context, index) {
-                  var expense = _expenses[index];
+                  var expense = expenses[index];
                   return Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SplitBuddy.Api.Enums;
 using SplitBuddy.Api.Helpers;
@@ -14,12 +16,13 @@ namespace SplitBuddy.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController(AppDbContext context, PasswordHasher passwordHasher, IConfiguration configuration, JwtService jwtService) : ControllerBase
+    public class UserController(AppDbContext context, PasswordHasher passwordHasher, IConfiguration configuration, JwtService jwtService, IMapper mapper) : ControllerBase
     {
         private readonly PasswordHasher _passwordHasher = passwordHasher;
         private readonly AppDbContext _context = context;
         private readonly IConfiguration _configuration = configuration;
         private readonly JwtService _jwtService = jwtService;
+        private readonly IMapper _mapper = mapper;
 
 
         [HttpPost("login")]
@@ -31,7 +34,6 @@ namespace SplitBuddy.Api.Controllers
                 return Unauthorized(Responses.UNAUTHORIZED);
             }
 
-            // Generowanie tokenu JWT
             var token = GenerateJwtToken(user);
             return Ok(new { Token = token });
         }
@@ -79,6 +81,17 @@ namespace SplitBuddy.Api.Controllers
             }
             return Ok(new { result.Role, result.Username, result.UserId });
 
+        }
+
+
+        [HttpGet("getUser")]
+        public async Task<UserFormVm?> GetUser([FromHeader] string Authorization)
+        {
+            var tokenInfo = _jwtService.DecodeJwtToken(Authorization);
+            var userId = tokenInfo.UserId;
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user is null) return null;
+            return _mapper.Map<UserFormVm>(user);
         }
 
 

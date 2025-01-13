@@ -1,14 +1,58 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:split_buddy/components/preload/preload.dart';
+import '../../../services/httpService.dart';
 import '../../../services/navigatorService.dart';
 import '../../../stores/userStore.dart';
 
-class ProfilePage extends StatelessWidget {
-  final UserStore userStore = UserStore();
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
 
-  void logout(context) async{
-      await userStore.clearUser();
-      NavigatorService.navigateTo(context, Preload());
+class _ProfilePageState extends State<ProfilePage> {
+  final UserStore userStore = UserStore();
+  final HttpService httpService = HttpService();
+
+  String? username;
+  String? email;
+  bool isLoading = true;
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      var response = await httpService.get("/api/User/getUser");
+      if (response != null && response.body != null) {
+        var body = jsonDecode(response.body);
+        setState(() {
+          username = body["username"];
+          email = body["email"];
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'No user data available!';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Something went wrong!';
+        isLoading = false;
+      });
+    }
+  }
+
+  void logout(BuildContext context) async {
+    await userStore.clearUser();
+    NavigatorService.navigateTo(context, Preload());
   }
 
   @override
@@ -26,10 +70,47 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Text(
-          'Profile content here',
-          style: TextStyle(color: Colors.black, fontSize: 18),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: isLoading
+            ? Center(
+          child: CircularProgressIndicator(),
+        )
+            : errorMessage != null
+            ? Center(
+          child: Text(
+            errorMessage!,
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+        )
+            : Column(
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.person,
+                  size: 80,
+                  color: Colors.grey[700],
+                ),
+                SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      username ?? '',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      email ?? '',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+          ],
         ),
       ),
     );

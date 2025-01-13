@@ -24,7 +24,7 @@ namespace SplitBuddy.Api.Controllers
             var userId = tokenInfo.UserId;
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             if (user is null) return null;
-            var friend = await _context.Users.SingleOrDefaultAsync(u => u.Id == form.FriendId);
+            var friend = await _context.Users.SingleOrDefaultAsync(u => u.Email == form.Email);
             if (friend is null) return null;
 
             var friendship = new Friendship { Friend=friend, User=user };

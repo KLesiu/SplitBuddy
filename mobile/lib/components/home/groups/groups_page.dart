@@ -15,7 +15,7 @@ class _GroupsPageState extends State<GroupsPage> {
   final HttpService httpService = HttpService();
   List<Map<String, dynamic>> groups = [];
 
-  void getGroups() async {
+  Future<void> getGroups() async {
     var response = await httpService.get("/api/Group/getAllUserGroups");
     if (response == null) return;
     var result = jsonDecode(response.body);
@@ -32,10 +32,11 @@ class _GroupsPageState extends State<GroupsPage> {
     getGroups();
   }
 
-  void _navigateToEditGroup(String groupName) {
+  void navigateToEditGroup(String groupName,int groupId) {
+    print(groupId);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EditGroupWidget(groupName: groupName),
+        builder: (context) => EditGroupWidget(groupName: groupName,groupId:groupId),
       ),
     );
   }
@@ -80,7 +81,7 @@ class _GroupsPageState extends State<GroupsPage> {
                         style:
                         TextStyle(fontSize: 16, color: Colors.black),
                       ),
-                      onTap: () => _navigateToEditGroup(groups[index]['name']),
+                      onTap: () => navigateToEditGroup(groups[index]['name'],groups[index]['id']),
                     ),
                   );
                 },

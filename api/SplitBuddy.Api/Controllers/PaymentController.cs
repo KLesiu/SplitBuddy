@@ -21,6 +21,16 @@ namespace SplitBuddy.Api.Controllers
             return _mapper.Map<PaymentFormVm>(payment);
         }
 
+        [HttpPost("getPaymentsInsideGroup")]
+        public async Task<List<PaymentFormVm>?> GetPaymentsInsideGroup([FromBody] PaymentsInsideGroupQueryVm form)
+        {
+            var payments =await  _context.Payments.Where(g=>g.Group.Id == form.GroupId).OrderBy(x=>x.DateTime).ToListAsync();
+            if (payments.Count == 0) return null;
+            return _mapper.Map<List<PaymentFormVm>>(payments);
+
+
+        }
+
         [HttpPost("createPaymentInsideGroup")]
         public async Task<int?> CreatePaymentInsideGroup([FromBody] PaymentVm form)
         {

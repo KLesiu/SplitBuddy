@@ -21,6 +21,16 @@ namespace SplitBuddy.Api.Controllers
             return _mapper.Map<GroupMembershipFormVm>(groupMembership);
         }
 
+        [HttpPost("getGroupMemberships")]
+        public async Task<List<GroupMembershipFormVm>?> GetGroupMemberships([FromBody] GroupMembershipsQueryVm query)
+        {
+            var groupsMemberships = await _context.GroupMembership.Where(x=>x.Group.Id == query.GroupId).Include(gm => gm.Group)
+               .Select(gm => gm.Group).Include(g=>g.Owner).Select(g=>g.Owner).ToListAsync();
+            if (groupsMemberships == null) return null;
+            return _mapper.Map<List<GroupMembershipFormVm>>(groupsMemberships);
+
+        }
+
         [HttpPost("joinNewMember")]
         public async Task<bool> JoinNewMember([FromBody] MemberFormVm form)
         {
