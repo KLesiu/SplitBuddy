@@ -5,6 +5,7 @@ import 'package:split_buddy/components/preload/preload.dart';
 import '../../../services/httpService.dart';
 import '../../../services/navigatorService.dart';
 import '../../../stores/userStore.dart';
+import '../../../constants/color-constants.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -70,7 +71,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: Padding(
+      body: Container(
+        color: ColorConstants.homeBackgroundColor,
         padding: const EdgeInsets.all(16.0),
         child: isLoading
             ? Center(
@@ -90,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icon(
                   Icons.person,
                   size: 80,
-                  color: Colors.grey[700],
+                  color: Colors.white,
                 ),
                 SizedBox(width: 16),
                 Column(
@@ -98,18 +100,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Text(
                       username ?? '',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text(
                       email ?? '',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
-
           ],
         ),
       ),

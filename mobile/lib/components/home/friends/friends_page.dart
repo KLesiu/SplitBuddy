@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:split_buddy/constants/color-constants.dart';
 import '../../../services/httpService.dart';
 import 'add_friend_widget.dart';
 
@@ -15,23 +15,23 @@ class _FriendsPageState extends State<FriendsPage> {
   final HttpService httpService = HttpService();
   List<Map<String, dynamic>> friends = [];
 
-
-  void getFriends() async{
-      var response = await httpService.get("/api/Friendship/getFriends");
-      if(response == null)return;
-      var result = jsonDecode(response.body);
-      if(result != null && result is List){
-        setState(() {
-          friends = List<Map<String, dynamic>>.from(result as Iterable);
-        });
-      }
+  void getFriends() async {
+    var response = await httpService.get("/api/Friendship/getFriends");
+    if (response == null) return;
+    var result = jsonDecode(response.body);
+    if (result != null && result is List) {
+      setState(() {
+        friends = List<Map<String, dynamic>>.from(result as Iterable);
+      });
     }
+  }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getFriends();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,51 +39,55 @@ class _FriendsPageState extends State<FriendsPage> {
         backgroundColor: Color(0xFF4EA95F),
         title: Text('Friends'),
       ),
-      body: Column(
-        children: [
-          AddFriendWidget(
-            onFriendAdded: getFriends,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: friends.isEmpty
-                  ? Center(
-                child: Text(
-                  'No friends added yet.',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+      body: Container(
+        color: ColorConstants.homeBackgroundColor, // Ustawienie tła
+        child: Column(
+          children: [
+            AddFriendWidget(
+              onFriendAdded: getFriends,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: friends.isEmpty
+                    ? Center(
+                  child: Text(
+                    'No friends added yet.',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                )
+                    : ListView.builder(
+                  itemCount: friends.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: Color(0xFF4EA95F),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Color(0xFFC4A663),
+                          child: Icon(Icons.person, color: Colors.black),
+                        ),
+                        title: Text(
+                          friends[index]['username']!,
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        subtitle: Text(
+                          'Email: ${friends[index]['email']}',
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              )
-                  : ListView.builder(
-                itemCount: friends.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Color(0xFF4EA95F),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Color(0xFFC4A663),
-                        child: Icon(Icons.person, color: Colors.black),
-                      ),
-                      title: Text(
-                        friends[index]['username']!,
-                        style: TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                      subtitle: Text(
-                        'Email: ${friends[index]['email']}',
-                        style: TextStyle(fontSize: 14, color: Colors.black54),
-                      ),
-                    ),
-                  );
-                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
 

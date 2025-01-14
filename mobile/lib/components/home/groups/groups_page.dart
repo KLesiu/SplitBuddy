@@ -86,7 +86,7 @@ class _GroupsPageState extends State<GroupsPage> {
                             color: Color.fromRGBO(255, 255, 255, 1),
                           ),
                         ),
-                        onTap: () => _navigateToEditGroup(groups[index]['name'],groups[index]['id']),
+                        onTap: () => navigateToEditGroup(groups[index]['name'],groups[index]['id']),
                       ),
                     );
                   },

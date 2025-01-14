@@ -18,35 +18,31 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
   List<Map<String, dynamic>> expenses = [];
   final HttpService httpService = HttpService();
 
+  void addNewExpenseInGroup(context) {}
 
-  void addNewExpenseInGroup(context){
-
-  }
-
-  Future<void> getMemberships() async{
+  Future<void> getMemberships() async {
     var body = {
-      "groupId":widget.groupId
+      "groupId": widget.groupId
     };
-    var response = await httpService.post("/api/GroupMembership/getGroupMemberships",body);
-    if(response == null)return;
+    var response = await httpService.post("/api/GroupMembership/getGroupMemberships", body);
+    if (response == null) return;
     var result = response.body;
     print(result);
-    if(result == null)return;
-
+    if (result == null) return;
   }
 
-  Future<void> getExpensesInsideGroup() async{
+  Future<void> getExpensesInsideGroup() async {
     var body = {
-      "groupId":widget.groupId
+      "groupId": widget.groupId
     };
-    var response = await httpService.post("/api/Payment/getPaymentsInsideGroup",body);
-    if(response == null)return;
+    var response = await httpService.post("/api/Payment/getPaymentsInsideGroup", body);
+    if (response == null) return;
     var result = response.body;
-    if(result == null)return;
+    if (result == null) return;
     setState(() {
       expenses = List<Map<String, dynamic>>.from(result as Iterable);
-    });  }
-
+    });
+  }
 
   @override
   void initState() {
@@ -54,37 +50,46 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
     getExpensesInsideGroup();
     getMemberships();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConstants.secondaryColor,
-        title: Text(widget.groupName),
+        title: Text(
+          widget.groupName,
+          style: TextStyle(color: Colors.white), // Kolor tekstu na biały
+        ),
       ),
-      body: Padding(
+      body: Container(
+        color: ColorConstants.homeBackgroundColor, // Tło
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ElevatedButton(
-              onPressed:()=>addNewExpenseInGroup(context) ,
+              onPressed: () => addNewExpenseInGroup(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstants.secondaryColor,
-                foregroundColor: Colors.black,
+                foregroundColor: Colors.white, // Kolor tekstu na biały
               ),
               child: Text('Add New Expense'),
             ),
             SizedBox(height: 16),
             Text(
               'Expenses',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Kolor tekstu na biały
+              ),
             ),
             Expanded(
               child: expenses.isEmpty
                   ? Center(
                 child: Text(
                   'No expenses added yet.',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: Colors.white), // Kolor tekstu na biały
                 ),
               )
                   : ListView.builder(
@@ -96,9 +101,14 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
-                      title: Text(expense['description']),
+                      title: Text(
+                        expense['description'],
+                        style: TextStyle(color: Colors.white), // Kolor tekstu na biały
+                      ),
                       subtitle: Text(
-                          '${expense['amount'].toStringAsFixed(2)} ${expense['currency']}'),
+                        '${expense['amount'].toStringAsFixed(2)} ${expense['currency']}',
+                        style: TextStyle(color: Colors.white), // Kolor tekstu na biały
+                      ),
                     ),
                   );
                 },
@@ -110,4 +120,3 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
     );
   }
 }
-
