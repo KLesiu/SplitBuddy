@@ -2,7 +2,7 @@
 {
     public class MemberFormVm
     {
-        public required int UserId { get; set; }
+        public required string UserEmail { get; set; }
         public required int GroupId { get; set; }
     }
 }
