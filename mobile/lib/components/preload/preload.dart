@@ -9,13 +9,14 @@ class Preload extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+        body: Center(  // Dodajemy Center, który umieści całą zawartość na środku
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,  // Centrowanie w pionie
+              crossAxisAlignment: CrossAxisAlignment.center, // Centrowanie w poziomie
+              children: [
               SizedBox(height: 80),
               // Logo aplikacji
               Center(
@@ -63,7 +64,7 @@ class Preload extends StatelessWidget {
                       onPressed: () => NavigatorService.navigateTo(context, Login()),
                       child: Text(
                         'Sign In',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -82,27 +83,17 @@ class Preload extends StatelessWidget {
                       onPressed: () => NavigatorService.navigateTo(context, Register()),
                       child: Text(
                         'Sign Up',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 30),
-              // Dodatkowy opis
-              Text(
-                'Manage your expenses effortlessly!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: ColorConstants.whiteColor.withOpacity(0.7),
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+        ),
     );
   }
 }

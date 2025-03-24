@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:split_buddy/components/elements/custom-form-input.dart';
+import 'package:split_buddy/components/preload/preload.dart';
 import 'package:split_buddy/components/register/register.dart';
 import 'package:split_buddy/constants/color-constants.dart';
 import 'package:split_buddy/enums/HttpResponses.dart';
@@ -60,6 +61,10 @@ class _LoginState extends State<Login> {
     NavigatorService.navigateTo(context, Register());
   }
 
+  void goToPreload(context){
+    NavigatorService.navigateTo(context, Preload());
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -76,7 +81,7 @@ class _LoginState extends State<Login> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Login',
+                    'Login account',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -84,7 +89,18 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+              SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Enter the data below to help you monitor your daily expenses, set a budget, and track how much money you have left for a given period.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: ColorConstants.greyColor,
+                  ),
+                ),
+              ),
+                SizedBox(height: 24),
                 if (errorMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
@@ -130,33 +146,51 @@ class _LoginState extends State<Login> {
                               height: 55,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorConstants.secondaryColor,
-                                  foregroundColor: ColorConstants.blackColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                onPressed: () => handleLogin(context),
-                                child: Text('Login'),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          SizedBox(
-                            width: double.infinity,
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 55,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
                                   backgroundColor: ColorConstants.primaryColor,
                                   foregroundColor: ColorConstants.blackColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                onPressed: () => goToRegister(context),
-                                child: Text('Don\'t have an account? Sign Up'),
+                                onPressed: () => handleLogin(context),
+                                child: Text('Login account'),
+                              ),
+
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorConstants.primaryColor,
+                              foregroundColor: ColorConstants.blackColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () => goToPreload(context),
+                            child: Text('Back'),
+                          ),
+                          SizedBox(height: 78),
+                          GestureDetector(
+                            onTap: () => goToRegister(context), // 🔹 Przekierowanie po kliknięciu
+                            child: Text.rich(
+                              TextSpan(
+                                text: "Don't have account?  ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: ColorConstants.whiteColor,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "Sign Up",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorConstants.primaryColor, // 🔹 Kolor dla "Sign Up"
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: ColorConstants.primaryColor,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

@@ -48,12 +48,17 @@ class CustomFormInput extends StatelessWidget {
           ),
         )
             : null,
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
+          borderSide: BorderSide(color: ColorConstants.borderColor),
+        ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
           borderSide: BorderSide(color: ColorConstants.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ColorConstants.borderColor),
+          borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
+          borderSide: BorderSide(color: ColorConstants.primaryColor, width: 2),
         ),
       ),
       style: TextStyle(color: Colors.white),

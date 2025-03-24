@@ -51,8 +51,8 @@ class _RegisterState extends State<Register> {
     return response;
   }
 
-  void goBack(context) {
-    NavigatorService.navigateTo(context, Preload());
+  void goToLogin(context) {
+    NavigatorService.navigateTo(context, Login());
   }
 
   @override
@@ -90,7 +90,7 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 24git),
                 if (validationMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
@@ -159,7 +159,7 @@ class _RegisterState extends State<Register> {
                               height: 55,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorConstants.secondaryColor,
+                                  backgroundColor: ColorConstants.primaryColor,
                                   foregroundColor: ColorConstants.blackColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -170,22 +170,28 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          SizedBox(
-                            width: double.infinity,
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 55,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorConstants.primaryColor,
-                                  foregroundColor: ColorConstants.blackColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                          SizedBox(height: 50),
+                          GestureDetector(
+                            onTap: () => goToLogin(context), // 🔹 Przekierowanie po kliknięciu
+                            child: Text.rich(
+                              TextSpan(
+                                text: "Do you have account?  ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: ColorConstants.whiteColor,
                                 ),
-                                onPressed: () => goBack(context),
-                                child: Text('Go back'),
+                                children: [
+                                  TextSpan(
+                                    text: "Sign In",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorConstants.primaryColor, // 🔹 Kolor dla "Sign Up"
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: ColorConstants.primaryColor,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
