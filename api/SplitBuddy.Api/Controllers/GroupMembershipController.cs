@@ -24,8 +24,8 @@ namespace SplitBuddy.Api.Controllers
         [HttpPost("getGroupMemberships")]
         public async Task<List<GroupMembershipFormVm>?> GetGroupMemberships([FromBody] GroupMembershipsQueryVm query)
         {
-            var groupsMemberships = await _context.GroupMembership.Where(x=>x.Group.Id == query.GroupId).Include(gm => gm.Group)
-               .Select(gm => gm.Group).Include(g=>g.Owner).Select(g=>g.Owner).ToListAsync();
+            var groupsMemberships = await _context.GroupMembership.Where(x=>x.Group.Id == query.GroupId).Include(gm => gm.Group).
+               Include(g=>g.User).ToListAsync();
             if (groupsMemberships == null) return null;
             return _mapper.Map<List<GroupMembershipFormVm>>(groupsMemberships);
 
@@ -34,7 +34,7 @@ namespace SplitBuddy.Api.Controllers
         [HttpPost("joinNewMember")]
         public async Task<bool> JoinNewMember([FromBody] MemberFormVm form)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == form.UserId);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == form.UserEmail);
             if (user is null) return false;
             var group = await _context.Groups.SingleOrDefaultAsync(u => u.Id == form.GroupId);
             if (group is null) return false;
@@ -49,7 +49,7 @@ namespace SplitBuddy.Api.Controllers
         [HttpDelete("deleteMember")]
         public async Task<bool> DeleteMember([FromBody] MemberFormVm form)
         {
-            var groupMemberShip = await _context.GroupMembership.Where(s=>s.Group.Id == form.GroupId && s.User.Id == form.UserId).SingleOrDefaultAsync();
+            var groupMemberShip = await _context.GroupMembership.Where(s=>s.Group.Id == form.GroupId && s.User.Email == form.UserEmail).SingleOrDefaultAsync();
             if (groupMemberShip is null)return false;
             _context.GroupMembership.Remove(groupMemberShip);
             await _context.SaveChangesAsync();

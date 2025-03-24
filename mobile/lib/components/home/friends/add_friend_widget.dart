@@ -39,7 +39,10 @@ class AddFriendWidget extends StatelessWidget {
       var response = await httpService.post("/api/Friendship/addFriend", body);
       if(response == null)return;
       var result = response.body;
-      print(result);
+      if(result == null)return;
+      Navigator.of(context).pop();
+      onFriendAdded();
+
     }
 
     showDialog(

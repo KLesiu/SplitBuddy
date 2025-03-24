@@ -19,10 +19,10 @@ class _PaymentPageState extends State<PaymentPage> {
   final TextEditingController _payingPersonController = TextEditingController();
   String selectedCurrency = 'USD';
   String selectedSplitMethod = 'Equally';
-  List<String> friends = ['Bartek', 'Antek', 'Kuba'];
-  List<Map<String, dynamic>> groups = [];
+  List<Map<String, dynamic>> friends = [];
+  List<dynamic> groups = [];
 
-  List<String> selectedFriends = [];
+  List<Map<String, dynamic>> selectedFriends = [];
   List<Map<String, dynamic>> selectedGroups = [];
 
   DateTime selectedDate = DateTime.now();
@@ -38,16 +38,20 @@ class _PaymentPageState extends State<PaymentPage> {
       });
     }
   }
-
-  void addNewFriend() {
-    if (_newFriendController.text.isNotEmpty) {
-      setState(() {
-        friends.add(_newFriendController.text);
-        _newFriendController.clear();
-      });
-      Navigator.of(context).pop();
-    }
+  Future<void> getGroupMemberships()async{
+    var body = {
+      'groupId':selectedGroups[0]['id']
+    };
+    var response = await httpService.post("/api/GroupMembership/getGroupMemberships", body);
+    if(response == null)return;
+    var result =  jsonDecode(response.body);
+    if(result == null)return;
+    setState(() {
+      friends = List<Map<String, dynamic>>.from(result as Iterable);
+    });
   }
+
+
 
   void showAddFriendDialog() {
     showDialog(
@@ -76,7 +80,7 @@ class _PaymentPageState extends State<PaymentPage> {
         child: Text('Cancel', style: TextStyle(color: Colors.redAccent)),
         ),
         TextButton(
-        onPressed: addNewFriend,
+        onPressed: (){},
         child: Text('Add', style: TextStyle(color: Colors.greenAccent)),
         ),
         ],
@@ -115,8 +119,9 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    setState(() {}); // Odśwież widżet główny po zamknięciu dialogu
+                  onPressed: () async{
+                    setState(() {});
+                    await getGroupMemberships();
                     Navigator.of(context).pop();
                   },
                   child: Text('Close', style: TextStyle(color: Colors.redAccent)),
@@ -144,7 +149,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ...friends.map((friend) {
                     bool isSelected = selectedFriends.contains(friend);
                     return CheckboxListTile(
-                      title: Text(friend, style: TextStyle(color: Colors.white)),
+                      title: Text(friend['user']['username'], style: TextStyle(color: Colors.white)),
                       value: isSelected,
                       onChanged: (bool? selected) {
                         setDialogState(() {
@@ -154,15 +159,12 @@ class _PaymentPageState extends State<PaymentPage> {
                             selectedFriends.remove(friend);
                           }
                         });
+                        print(selectedFriends);
                       },
                       checkColor: Colors.black,
                       activeColor: Colors.greenAccent,
                     );
                   }).toList(),
-                  TextButton(
-                    onPressed: showAddFriendDialog,
-                    child: Text('Add New Friend', style: TextStyle(color: Colors.greenAccent)),
-                  ),
                 ],
               ),
               actions: [
@@ -303,11 +305,12 @@ class _PaymentPageState extends State<PaymentPage> {
                       runSpacing: 4.0,
                       children: selectedFriends.map((friend) {
                         return Chip(
-                          label: Text(friend, style: TextStyle(color: Colors.black)),
+                          label: Text(friend['user']['username'], style: TextStyle(color: Colors.black)),
                           backgroundColor: Colors.greenAccent,
                         );
                       }).toList(),
                     ),
+
                 ],
               ),
             SizedBox(height: 12),
