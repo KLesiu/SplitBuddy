@@ -90,7 +90,7 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                SizedBox(height: 24git),
+                SizedBox(height: 24),
                 if (validationMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),

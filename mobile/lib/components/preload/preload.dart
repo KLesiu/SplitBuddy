@@ -64,11 +64,7 @@ class Preload extends StatelessWidget {
                       onPressed: () => NavigatorService.navigateTo(context, Login()),
                       child: Text(
                         'Sign In',
-<<<<<<< HEAD
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-=======
-
->>>>>>> 7d5742798cc48d1e3a52bbfb58622a079830039b
                       ),
                     ),
                   ),
@@ -87,11 +83,7 @@ class Preload extends StatelessWidget {
                       onPressed: () => NavigatorService.navigateTo(context, Register()),
                       child: Text(
                         'Sign Up',
-<<<<<<< HEAD
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-=======
-
->>>>>>> 7d5742798cc48d1e3a52bbfb58622a079830039b
                       ),
                     ),
                   ),
