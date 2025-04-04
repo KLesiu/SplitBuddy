@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_buddy/constants/color-constants.dart';
 
 class Menu extends StatelessWidget {
   final int selectedIndex;
@@ -14,9 +15,9 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Color(0xFF4EA95F),
-      selectedItemColor: Color(0xFFC4A663),
-      unselectedItemColor: Colors.white,
+      backgroundColor: ColorConstants.backgroundColor ,
+      selectedItemColor: ColorConstants.secondaryColor,
+      unselectedItemColor: ColorConstants.primaryColor ,
       currentIndex: selectedIndex,
       onTap: onItemTapped,
       iconSize: 28,
@@ -49,7 +50,7 @@ class Menu extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),
-          label: 'Profile',
+          label: 'Home',
         ),
       ],
     );

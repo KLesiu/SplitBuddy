@@ -60,8 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF4EA95F),
-        title: Text('Profile'),
+        backgroundColor: ColorConstants.backgroundColor,
+        title: Text('Welcome back "..."'),
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app, size: 30, color: Colors.amber[700]),
