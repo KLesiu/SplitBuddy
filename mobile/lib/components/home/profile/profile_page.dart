@@ -59,12 +59,67 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer( // menu po lewej
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: ColorConstants.backgroundColor,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: ColorConstants.primaryColor,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                // dodaj akcję
+              },
+            ),
+            // Możesz dodać więcej pozycji menu
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: ColorConstants.backgroundColor,
-        title: Text('Welcome back "..."'),
+        centerTitle: true,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: ColorConstants.primaryColor),
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // otwiera drawer
+              },
+            );
+          },
+        ),
+        title: Text.rich(
+          TextSpan(
+            text: 'Welcome back, ',
+            style: TextStyle(
+              color: ColorConstants.primaryColor,
+              fontSize: 20,
+            ),
+            children: [
+              TextSpan(
+                text: username ?? '...',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app, size: 30, color: Colors.amber[700]),
+            icon: Icon(Icons.exit_to_app, size: 30, color: ColorConstants.primaryColor),
             onPressed: () {
               logout(context);
             },
@@ -72,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: Container(
-        color: ColorConstants.homeBackgroundColor,
+        color: ColorConstants.backgroundColor,
         padding: const EdgeInsets.all(16.0),
         child: isLoading
             ? Center(
