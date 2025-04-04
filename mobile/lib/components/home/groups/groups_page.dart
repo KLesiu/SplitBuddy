@@ -46,11 +46,14 @@ class _GroupsPageState extends State<GroupsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF4EA95F),
-        title: Text('Groups'),
+        backgroundColor: ColorConstants.backgroundColor,
+        title: Text(
+          'Groups',
+          style: TextStyle(color: ColorConstants.primaryColor), // Ustawienie koloru
+        ),
       ),
       body: Container(
-        color: ColorConstants.homeBackgroundColor, // Ustawienie tła
+        color: ColorConstants.backgroundColor, // Ustawienie tła
         child: Column(
           children: [
             AddGroupWidget(

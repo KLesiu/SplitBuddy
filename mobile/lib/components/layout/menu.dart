@@ -49,7 +49,7 @@ class Menu extends StatelessWidget {
           label: 'Notifications',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
+          icon: Icon(Icons.home_outlined),
           label: 'Home',
         ),
       ],
