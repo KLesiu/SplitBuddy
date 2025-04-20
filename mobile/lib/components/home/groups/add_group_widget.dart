@@ -18,7 +18,7 @@ class AddGroupWidget extends StatelessWidget {
           _showCreateGroupDialog(context);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor:  ColorConstants.secondaryColor,
+          backgroundColor: ColorConstants.secondaryColor,
           foregroundColor: Colors.black,
         ),
         child: Text('Create New Group'),
@@ -29,23 +29,25 @@ class AddGroupWidget extends StatelessWidget {
   void _showCreateGroupDialog(BuildContext context) {
     final TextEditingController groupNameController = TextEditingController();
 
-
-    void createGroup(context) async{
+    void createGroup(context) async {
       var body = {
         "name": groupNameController.text,
       };
       var response = await httpService.post("/api/Group/createGroup", body);
       var result = response?.body;
-      if(result==null)return;
+      if (result == null) return;
       Navigator.of(context).pop();
       onGroupCreated();
     }
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Create New Group', style: TextStyle(fontWeight: FontWeight.bold)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text('Create New Group',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -70,7 +72,7 @@ class AddGroupWidget extends StatelessWidget {
                 backgroundColor: Color(0xFF4EA95F),
                 foregroundColor: Colors.black,
               ),
-              onPressed: ()=>createGroup(context),
+              onPressed: () => createGroup(context),
               child: Text('Create Group'),
             ),
           ],
@@ -79,4 +81,3 @@ class AddGroupWidget extends StatelessWidget {
     );
   }
 }
-

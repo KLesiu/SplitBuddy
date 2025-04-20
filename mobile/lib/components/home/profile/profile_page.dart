@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:split_buddy/components/preload/preload.dart';
+
+import '../../../constants/color-constants.dart';
 import '../../../services/httpService.dart';
 import '../../../services/navigatorService.dart';
 import '../../../stores/userStore.dart';
-import '../../../constants/color-constants.dart';
+import '../payment/payment_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -59,7 +61,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer( // menu po lewej
+      drawer: Drawer(
+        // menu po lewej
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -116,10 +119,10 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
-
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app, size: 30, color: ColorConstants.primaryColor),
+            icon: Icon(Icons.exit_to_app,
+                size: 30, color: ColorConstants.primaryColor),
             onPressed: () {
               logout(context);
             },
@@ -131,50 +134,114 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(16.0),
         child: isLoading
             ? Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : errorMessage != null
-            ? Center(
-          child: Text(
-            errorMessage!,
-            style: TextStyle(color: Colors.red, fontSize: 18),
-          ),
-        )
-            : Column(
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.person,
-                  size: 80,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      username ?? '',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                ? Center(
+                    child: Text(
+                      errorMessage!,
+                      style: TextStyle(color: Colors.red, fontSize: 18),
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      email ?? '',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
+                  )
+                : Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 80,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                username ?? '',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                email ?? '',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PaymentPage()),
+                                );
+                              },
+                              icon: Icon(Icons.add_circle_outline,
+                                  color: Colors.black),
+                              label: Text('New Split'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.greenAccent,
+                                foregroundColor: Colors.black,
+                                minimumSize: Size(double.infinity, 50),
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                // TODO: navigate to My Groups page
+                              },
+                              icon: Icon(Icons.group, color: Colors.black),
+                              label: Text('My Groups'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.greenAccent,
+                                foregroundColor: Colors.black,
+                                minimumSize: Size(double.infinity, 50),
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                // TODO: navigate to My Friends page
+                              },
+                              icon: Icon(Icons.people, color: Colors.black),
+                              label: Text('My Friends'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.greenAccent,
+                                foregroundColor: Colors.black,
+                                minimumSize: Size(double.infinity, 50),
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                // TODO: navigate to History page
+                              },
+                              icon: Icon(Icons.history, color: Colors.black),
+                              label: Text('History'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.greenAccent,
+                                foregroundColor: Colors.black,
+                                minimumSize: Size(double.infinity, 50),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
       ),
     );
   }
