@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/home/payment/payment_page.dart';
-import 'friends/friends_page.dart';
+
+import '../layout/menu.dart';
 import 'groups/groups_page.dart';
 import 'notifications/notifications_page.dart';
 import 'profile/profile_page.dart';
-import '../layout/menu.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
-
-
 }
 
 class _HomeState extends State<Home> {
@@ -22,13 +19,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-
-
   List<Widget> _pages() {
     return [
       GroupsPage(),
-      FriendsPage(),
-      PaymentPage(),
       NotificationsPage(),
       ProfilePage(),
     ];
@@ -49,4 +42,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
