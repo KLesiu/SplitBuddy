@@ -17,6 +17,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   http: ^1.2.2
   intl: ^0.20.1
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +29,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - assets/images/logo.svg
   fonts:
     - family: Inter
       fonts:
@@ -37,5 +39,9 @@ flutter:
         - asset: lib/assets/fonts/Inter_24pt-LightItalic.ttf
           style: italic
         - asset: lib/assets/fonts/Inter_24pt-Light.ttf
+
+
+
+
 
 
