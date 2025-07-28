@@ -29,7 +29,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - assets/images/logo.svg
+    - lib/assets/images/logo.svg
   fonts:
     - family: Inter
       fonts:

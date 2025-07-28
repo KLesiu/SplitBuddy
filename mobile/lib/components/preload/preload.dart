@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:split_buddy/components/login/login.dart';
-import 'package:split_buddy/components/logo/logo.dart';
 import 'package:split_buddy/components/register/register.dart';
 import 'package:split_buddy/constants/color-constants.dart';
 import 'package:split_buddy/services/navigatorService.dart';
@@ -25,22 +25,10 @@ class Preload extends StatelessWidget {
                 SizedBox(height: 80),
                 // Logo aplikacji
                 Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    child: AppLogo(size: 60),
-                  ),
-                ),
-                SizedBox(height: 30),
-                // Tytuł aplikacji
-                Text(
-                  'SPLIT BUDDY',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: ColorConstants.whiteColor,
-                    letterSpacing: 2,
+                  child: SvgPicture.asset(
+                    'lib/assets/images/logo.svg',
+                    width: 160,
+                    height: 160,
                   ),
                 ),
                 SizedBox(height: 40),
