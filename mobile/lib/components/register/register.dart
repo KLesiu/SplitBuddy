@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:split_buddy/components/preload/preload.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:split_buddy/constants/color-constants.dart';
 import 'package:split_buddy/enums/HttpResponses.dart';
 import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
+
 import '../elements/custom-form-input.dart';
 import '../login/login.dart';
-import 'package:http/http.dart' as http;
 
 class Register extends StatefulWidget {
   @override
@@ -19,7 +20,8 @@ class _RegisterState extends State<Register> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final String? apiUrl = dotenv.env['API_URL'];
   final HttpService httpService = HttpService();
 
@@ -29,7 +31,7 @@ class _RegisterState extends State<Register> {
     if (_formKey.currentState!.validate()) {
       var response = await submit();
       var result = response?.body;
-      if(result == null)return;
+      if (result == null) return;
       if (result == HttpResponses.success.message) {
         NavigatorService.navigateTo(context, Login());
       } else {
@@ -67,7 +69,15 @@ class _RegisterState extends State<Register> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(height: 300),
+                SizedBox(height: 100),
+                Center(
+                  child: SvgPicture.asset(
+                    'lib/assets/images/logo.svg',
+                    width: 160,
+                    height: 160,
+                  ),
+                ),
+                SizedBox(height: 40),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -172,7 +182,8 @@ class _RegisterState extends State<Register> {
                           ),
                           SizedBox(height: 50),
                           GestureDetector(
-                            onTap: () => goToLogin(context), // 🔹 Przekierowanie po kliknięciu
+                            onTap: () => goToLogin(
+                                context), // 🔹 Przekierowanie po kliknięciu
                             child: Text.rich(
                               TextSpan(
                                 text: "Do you have account?  ",
@@ -186,9 +197,11 @@ class _RegisterState extends State<Register> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: ColorConstants.primaryColor, // 🔹 Kolor dla "Sign Up"
+                                      color: ColorConstants
+                                          .primaryColor, // 🔹 Kolor dla "Sign Up"
                                       decoration: TextDecoration.underline,
-                                      decorationColor: ColorConstants.primaryColor,
+                                      decorationColor:
+                                          ColorConstants.primaryColor,
                                     ),
                                   ),
                                 ],
