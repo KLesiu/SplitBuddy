@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:split_buddy/components/elements/custom-form-input.dart';
 import 'package:split_buddy/components/preload/preload.dart';
 import 'package:split_buddy/components/register/register.dart';
@@ -9,7 +10,6 @@ import 'package:split_buddy/constants/color-constants.dart';
 import 'package:split_buddy/enums/HttpResponses.dart';
 import 'package:split_buddy/services/httpService.dart';
 import 'package:split_buddy/services/navigatorService.dart';
-import 'package:http/http.dart' as http;
 import 'package:split_buddy/stores/userStore.dart';
 
 import '../home/home.dart';
@@ -31,13 +31,14 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState!.validate()) {
       var response = await submit();
       var result = response?.body;
-      if(result == null)return;
+      if (result == null) return;
       if (result != HttpResponses.unauthorized.message) {
         setState(() {
           errorMessage = null;
         });
         var decoded = jsonDecode(result);
-        var user = User(username: usernameController.text, token: decoded['token']);
+        var user =
+            User(username: usernameController.text, token: decoded['token']);
 
         await UserStore().saveUser(user);
         NavigatorService.navigateTo(context, Home());
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
     NavigatorService.navigateTo(context, Register());
   }
 
-  void goToPreload(context){
+  void goToPreload(context) {
     NavigatorService.navigateTo(context, Preload());
   }
 
@@ -77,7 +78,15 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(height: 300),
+                SizedBox(height: 140),
+                Center(
+                  child: SvgPicture.asset(
+                    'lib/assets/images/logo.svg',
+                    width: 160,
+                    height: 160,
+                  ),
+                ),
+                SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -89,17 +98,17 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Enter the data below to help you monitor your daily expenses, set a budget, and track how much money you have left for a given period.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: ColorConstants.greyColor,
+                SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Enter the data below to help you monitor your daily expenses, set a budget, and track how much money you have left for a given period.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: ColorConstants.greyColor,
+                    ),
                   ),
                 ),
-              ),
                 SizedBox(height: 24),
                 if (errorMessage != null)
                   Padding(
@@ -155,7 +164,6 @@ class _LoginState extends State<Login> {
                                 onPressed: () => handleLogin(context),
                                 child: Text('Login account'),
                               ),
-
                             ),
                           ),
                           ElevatedButton(
@@ -171,7 +179,8 @@ class _LoginState extends State<Login> {
                           ),
                           SizedBox(height: 78),
                           GestureDetector(
-                            onTap: () => goToRegister(context), // 🔹 Przekierowanie po kliknięciu
+                            onTap: () => goToRegister(
+                                context), // 🔹 Przekierowanie po kliknięciu
                             child: Text.rich(
                               TextSpan(
                                 text: "Don't have account?  ",
@@ -185,9 +194,11 @@ class _LoginState extends State<Login> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: ColorConstants.primaryColor, // 🔹 Kolor dla "Sign Up"
+                                      color: ColorConstants
+                                          .primaryColor, // 🔹 Kolor dla "Sign Up"
                                       decoration: TextDecoration.underline,
-                                      decorationColor: ColorConstants.primaryColor,
+                                      decorationColor:
+                                          ColorConstants.primaryColor,
                                     ),
                                   ),
                                 ],
