@@ -3,28 +3,28 @@ import '../../../constants/color-constants.dart';
 
 
 class Avatar extends StatelessWidget {
-  // 🔹 Mockowane dane użytkownika
-  final String firstName = "Jan";
-  final String lastName = "Dąbrowski";
+  final double size;
 
-  Avatar({super.key});
+  const Avatar({super.key, this.size = 60});
 
   @override
   Widget build(BuildContext context) {
-    // 🔸 Wyciąganie inicjałów
-    String initials = "${firstName[0]}${lastName[0]}".toUpperCase();
+    final String firstName = 'Norbert';
+    final String lastName = 'Gierczak';
+    final String initials = '${firstName[0]}${lastName[0]}';
 
     return CircleAvatar(
-      radius: 40, // Rozmiar avatara
-      backgroundColor: ColorConstants.primaryColor, // Kolor tła
+      radius: size / 2,
+      backgroundColor: ColorConstants.primaryColor,
       child: Text(
         initials,
         style: TextStyle(
           color: ColorConstants.blackColor,
-          fontSize: 24,
+          fontSize: size * 0.4,
           fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 }
+

@@ -9,6 +9,8 @@ import '../../../services/navigatorService.dart';
 import '../../../stores/userStore.dart';
 import '../payment/payment_page.dart';
 import 'package:split_buddy/components/elements/avatar.dart';
+import 'package:split_buddy/components/elements/avatar_text.dart';
+
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -148,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Row(
                         children: [
-                          Avatar(),
+                          AvatarText(size: 80),
                           SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
