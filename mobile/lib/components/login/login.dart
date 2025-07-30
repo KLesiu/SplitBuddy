@@ -166,6 +166,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 80),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: ColorConstants.primaryColor,
@@ -177,7 +178,7 @@ class _LoginState extends State<Login> {
                             onPressed: () => goToPreload(context),
                             child: Text('Back'),
                           ),
-                          SizedBox(height: 78),
+                          SizedBox(height: 35),
                           GestureDetector(
                             onTap: () => goToRegister(
                                 context), // 🔹 Przekierowanie po kliknięciu

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:split_buddy/components/elements/avatar_text.dart';
 import 'package:split_buddy/components/preload/preload.dart';
 
 import '../../../constants/color-constants.dart';
@@ -8,9 +9,6 @@ import '../../../services/httpService.dart';
 import '../../../services/navigatorService.dart';
 import '../../../stores/userStore.dart';
 import '../payment/payment_page.dart';
-import 'package:split_buddy/components/elements/avatar.dart';
-import 'package:split_buddy/components/elements/avatar_text.dart';
-
 
 class ProfilePage extends StatefulWidget {
   @override

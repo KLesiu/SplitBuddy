@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_buddy/components/home/friends/friends_page.dart';
 
 import '../layout/menu.dart';
 import 'groups/groups_page.dart';
@@ -22,6 +23,7 @@ class _HomeState extends State<Home> {
   List<Widget> _pages() {
     return [
       GroupsPage(),
+      FriendsPage(),
       NotificationsPage(),
       ProfilePage(),
     ];

@@ -71,26 +71,10 @@ class Menu extends StatelessWidget {
           icon: Icon(Icons.group_outlined),
           label: 'Groups',
         ),
-        // BottomNavigationBarItem(
-        //   icon: Icon(Icons.people_outline),
-        //   label: 'Friends',
-        // ),
-        // BottomNavigationBarItem(
-        //   icon: Container(
-        //     width: 52,
-        //     height: 52,
-        //     decoration: BoxDecoration(
-        //       color: Color(0xFFBC9D5A),
-        //       shape: BoxShape.circle, // Ustawienie okrągłego kształtu
-        //     ),
-        //     child: Icon(
-        //       Icons.add,
-        //       color: Colors.black,
-        //       size: 36,
-        //     ),
-        //   ),
-        //   label: '',
-        // ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.people_outline),
+          label: 'Friends',
+        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications_none),
           label: 'Notifications',
