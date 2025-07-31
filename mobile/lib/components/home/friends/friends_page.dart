@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:split_buddy/components/elements/custom-form-input.dart';
 import 'package:split_buddy/components/home/friends/add_friend_widget.dart';
 import 'package:split_buddy/constants/color-constants.dart';
 
@@ -16,6 +17,8 @@ class FriendsPage extends StatefulWidget {
 class _FriendsPageState extends State<FriendsPage> {
   final HttpService httpService = HttpService();
   List<Map<String, dynamic>> friends = [];
+
+  final TextEditingController searchController = TextEditingController();
 
   void getFriends() async {
     var response = await httpService.get("/api/Friendship/getFriends");
@@ -35,6 +38,12 @@ class _FriendsPageState extends State<FriendsPage> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -49,6 +58,15 @@ class _FriendsPageState extends State<FriendsPage> {
         color: ColorConstants.backgroundColor, // Ustawienie tła
         child: Column(
           children: [
+            if (friends.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: CustomFormInput(
+                  controller: searchController,
+                  labelText: 'Search friends...',
+                  icon: Icons.search,
+                ),
+              ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
