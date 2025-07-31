@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../constants/color-constants.dart';
 
 class NotificationsPage extends StatelessWidget {
@@ -9,9 +10,9 @@ class NotificationsPage extends StatelessWidget {
         backgroundColor: ColorConstants.backgroundColor,
         title: Text(
           'Notifications',
-          style: TextStyle(color: ColorConstants.primaryColor), // Ustawienie koloru
+          style: TextStyle(
+              color: ColorConstants.primaryColor), // Ustawienie koloru
         ),
-
       ),
       body: Container(
         color: ColorConstants.backgroundColor,
