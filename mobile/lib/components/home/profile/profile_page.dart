@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/elements/avatar_text.dart';
+import 'package:split_buddy/components/elements/avatar_text_widget.dart';
 import 'package:split_buddy/components/preload/preload.dart';
 
 import '../../../constants/color-constants.dart';
@@ -148,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Row(
                         children: [
-                          AvatarText(size: 80),
+                          UserInfoWidget(),
                           SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

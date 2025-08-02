@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/elements/avatar.dart';
- // importujemy nasz komponent
+
+import 'avatar.dart';
 
 class AvatarText extends StatelessWidget {
   final double size;
+  final String firstName;
+  final String lastName;
 
-  const AvatarText({super.key, this.size = 60});
-
-  Map<String, String> getUserData() {
-    return {
-      'firstName': 'Norbert',
-      'lastName': 'Iger',
-    };
-  }
+  const AvatarText({
+    super.key,
+    required this.firstName,
+    required this.lastName,
+    this.size = 60,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final userData = getUserData();
-    final String firstName = userData['firstName'] ?? '';
-    final String lastName = userData['lastName'] ?? '';
-    final String initial = firstName.isNotEmpty ? firstName[0].toUpperCase() : '?';
+    final String initial =
+        firstName.isNotEmpty ? firstName[0].toUpperCase() : '?';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Avatar(size: size),
+        Avatar(
+          firstName: firstName,
+          lastName: lastName,
+          size: size,
+        ),
         const SizedBox(height: 6),
         SizedBox(
-          width: size, // szerokość równa avatarowi
+          width: size,
           child: Text(
             '$initial. $lastName',
             style: TextStyle(
