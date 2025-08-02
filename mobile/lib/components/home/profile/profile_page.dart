@@ -148,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Row(
                         children: [
-                          UserInfoWidget(),
+                          AvatarTextWidget(),
                           SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

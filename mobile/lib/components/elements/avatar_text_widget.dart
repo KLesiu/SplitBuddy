@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'avatar_text.dart';
 
-class UserInfoWidget extends StatelessWidget {
-  const UserInfoWidget({super.key});
+class AvatarTextWidget extends StatelessWidget {
+  const AvatarTextWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

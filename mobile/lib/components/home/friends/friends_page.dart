@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:split_buddy/components/elements/avatar_widget.dart';
 import 'package:split_buddy/components/elements/custom-form-input.dart';
 import 'package:split_buddy/components/home/friends/add_friend_widget.dart';
 import 'package:split_buddy/constants/color-constants.dart';
@@ -63,7 +64,7 @@ class _FriendsPageState extends State<FriendsPage> {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: CustomFormInput(
                   controller: searchController,
-                  labelText: 'Search friends...',
+                  labelText: 'Search...',
                   icon: Icons.search,
                 ),
               ),
@@ -81,24 +82,57 @@ class _FriendsPageState extends State<FriendsPage> {
                         itemCount: friends.length,
                         itemBuilder: (context, index) {
                           return Card(
-                            color: Color(0xFF4EA95F),
+                            color: ColorConstants.backgroundColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                color:
+                                    ColorConstants.primaryColor, // kolor ramki
+                                width: 0.7, // grubość ramki
+                              ),
                             ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Color(0xFFC4A663),
-                                child: Icon(Icons.person, color: Colors.black),
-                              ),
-                              title: Text(
-                                friends[index]['username']!,
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black),
-                              ),
-                              subtitle: Text(
-                                'Email: ${friends[index]['email']}',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black54),
+                            child: SizedBox(
+                              height: 100,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment
+                                    .center, // centrowanie pionowe
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(
+                                        16.0), // równe odstępy dookoła avatara
+                                    child: AvatarWidget(),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical:
+                                              16.0), // pionowe odstępy dla tekstu
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            friends[index]['username']!,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: ColorConstants.whiteColor,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Email: ${friends[index]['email']}',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: ColorConstants.whiteColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
