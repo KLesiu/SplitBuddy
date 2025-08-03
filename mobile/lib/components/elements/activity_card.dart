@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/elements/avatar_widget.dart';
 import 'package:split_buddy/constants/color-constants.dart';
+
+import 'avatar.dart';
 
 class ActivityCard extends StatelessWidget {
   final String title;
   final String description;
+  final String subtitle;
 
-  const ActivityCard({required this.title, required this.description, Key? key})
+  const ActivityCard(
+      {required this.title,
+      required this.description,
+      required this.subtitle,
+      Key? key})
       : super(key: key);
+
+  final String firstName = 'Norbert';
+  final String lastName = 'Gierczak';
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +30,17 @@ class ActivityCard extends StatelessWidget {
         ),
       ),
       child: SizedBox(
-        height: 100,
+        height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: AvatarWidget(),
+              child: Avatar(
+                firstName: firstName,
+                lastName: lastName,
+                size: 60,
+              ),
             ),
             Expanded(
               child: Padding(
@@ -46,6 +59,13 @@ class ActivityCard extends StatelessWidget {
                     ),
                     Text(
                       description,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: ColorConstants.whiteColor,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
                       style: TextStyle(
                         fontSize: 13,
                         color: ColorConstants.whiteColor,

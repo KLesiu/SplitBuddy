@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/elements/avatar_text_widget.dart';
+import 'package:split_buddy/components/elements/avatar_text.dart';
 import 'package:split_buddy/components/preload/preload.dart';
 
 import '../../../constants/color-constants.dart';
@@ -58,6 +58,9 @@ class _ProfilePageState extends State<ProfilePage> {
     await userStore.clearUser();
     NavigatorService.navigateTo(context, Preload());
   }
+
+  final String firstName = 'Norbert';
+  final String lastName = 'Gierczak';
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +151,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Row(
                         children: [
-                          AvatarTextWidget(),
+                          AvatarText(
+                            firstName: firstName,
+                            lastName: lastName,
+                            size: 60,
+                          ),
                           SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

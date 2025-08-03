@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:split_buddy/components/elements/activity_card.dart';
 import 'package:split_buddy/components/elements/custom-form-input.dart';
@@ -19,15 +17,37 @@ class _NotificationsPageState extends State<NotificationsPage> {
   List<Map<String, dynamic>> notifications = [];
   final TextEditingController searchController = TextEditingController();
 
+  // void getNotifications() async {
+  //   var response = await httpService.get("/api/Notifications/getAll");
+  //   if (response == null) return;
+  //   var result = jsonDecode(response.body);
+  //   if (result != null && result is List) {
+  //     setState(() {
+  //       notifications = List<Map<String, dynamic>>.from(result as Iterable);
+  //     });
+  //   }
+  // }
+
   void getNotifications() async {
-    var response = await httpService.get("/api/Notifications/getAll");
-    if (response == null) return;
-    var result = jsonDecode(response.body);
-    if (result != null && result is List) {
-      setState(() {
-        notifications = List<Map<String, dynamic>>.from(result as Iterable);
-      });
-    }
+    setState(() {
+      notifications = [
+        {
+          'title': 'Tymczasowe rozwiązanie',
+          'message': 'Anna added a new expense to Trip to Rome',
+          'subtitle': '3 minutes ago',
+        },
+        {
+          'title': 'Payment received',
+          'message': 'You received 25 PLN from Mark',
+          'subtitle': '1 hour ago',
+        },
+        {
+          'title': 'Reminder',
+          'message': 'Don\'t forget to settle up with Julia',
+          'subtitle': 'Yesterday',
+        },
+      ];
+    });
   }
 
   @override
@@ -92,6 +112,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           return ActivityCard(
                             title: notifications[index]['title'] ?? 'No title',
                             description:
+                                notifications[index]['message'] ?? 'No message',
+                            subtitle:
                                 notifications[index]['message'] ?? 'No message',
                           );
                         },
