@@ -25,7 +25,6 @@ class _FriendsPageState extends State<FriendsPage> {
     var response = await httpService.get("/api/Friendship/getFriends");
     if (response == null) return;
     var result = jsonDecode(response.body);
-    print("Odpowiedź z serwera: $result"); // 🐛 DEBUG
     if (result != null && result is List) {
       setState(() {
         friends = List<Map<String, dynamic>>.from(result as Iterable);
@@ -84,7 +83,8 @@ class _FriendsPageState extends State<FriendsPage> {
                     ? Center(
                         child: Text(
                           'No friends added yet.',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 16, color: ColorConstants.whiteColor),
                         ),
                       )
                     : ListView.builder(
