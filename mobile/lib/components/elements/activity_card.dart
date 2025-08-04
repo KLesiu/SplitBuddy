@@ -5,18 +5,31 @@ import 'avatar.dart';
 
 class ActivityCard extends StatelessWidget {
   final String title;
-  final String description;
-  final String subtitle;
+  final String? description;
+  final DateTime timestamp;
+  final String firstName;
+  final String lastName;
 
-  const ActivityCard(
-      {required this.title,
-      required this.description,
-      required this.subtitle,
-      Key? key})
-      : super(key: key);
+  const ActivityCard({
+    required this.title,
+    this.description,
+    required this.timestamp,
+    required this.firstName,
+    required this.lastName,
+    Key? key,
+  }) : super(key: key);
 
-  final String firstName = 'Norbert';
-  final String lastName = 'Gierczak';
+  // 🧠 Funkcja obliczająca, ile czasu temu przyszło powiadomienie
+  String getTimeAgo(DateTime time) {
+    final now = DateTime.now();
+    final difference = now.difference(time);
+
+    if (difference.inMinutes < 1) return 'Just now';
+    if (difference.inMinutes < 60) return '${difference.inMinutes} minutes ago';
+    if (difference.inHours < 24) return '${difference.inHours} hours ago';
+    if (difference.inDays == 1) return 'Yesterday';
+    return '${difference.inDays} days ago';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +70,16 @@ class ActivityCard extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: ColorConstants.whiteColor,
+                    if (description != null) // ✅ tylko jeśli istnieje
+                      Text(
+                        description!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: ColorConstants.whiteColor,
+                        ),
                       ),
-                    ),
                     Text(
-                      subtitle,
+                      getTimeAgo(timestamp),
                       style: TextStyle(
                         fontSize: 13,
                         color: ColorConstants.whiteColor,

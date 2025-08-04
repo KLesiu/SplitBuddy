@@ -7,11 +7,11 @@ class FriendCard extends StatelessWidget {
   final String username;
   final String email;
 
-  const FriendCard({required this.username, required this.email, Key? key})
-      : super(key: key);
-
-  final String firstName = 'Norbert';
-  final String lastName = 'Gierczak';
+  const FriendCard({
+    required this.username,
+    required this.email,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +32,8 @@ class FriendCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Avatar(
-                firstName: firstName,
-                lastName: lastName,
+                firstName: "Antoni",
+                lastName: 'Krawczyk',
                 size: 60,
               ),
             ),

@@ -17,34 +17,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
   List<Map<String, dynamic>> notifications = [];
   final TextEditingController searchController = TextEditingController();
 
-  // void getNotifications() async {
-  //   var response = await httpService.get("/api/Notifications/getAll");
-  //   if (response == null) return;
-  //   var result = jsonDecode(response.body);
-  //   if (result != null && result is List) {
-  //     setState(() {
-  //       notifications = List<Map<String, dynamic>>.from(result as Iterable);
-  //     });
-  //   }
-  // }
-
   void getNotifications() async {
     setState(() {
       notifications = [
         {
           'title': 'Tymczasowe rozwiązanie',
           'message': 'Anna added a new expense to Trip to Rome',
-          'subtitle': '3 minutes ago',
+          'timestamp': DateTime.now().subtract(Duration(minutes: 3)),
+          'firstName': 'Anna',
+          'lastName': 'Nowak',
         },
         {
           'title': 'Payment received',
           'message': 'You received 25 PLN from Mark',
-          'subtitle': '1 hour ago',
+          'timestamp': DateTime.now().subtract(Duration(hours: 1)),
+          'firstName': 'Mark',
+          'lastName': 'Zieliński',
         },
         {
           'title': 'Reminder',
           'message': 'Don\'t forget to settle up with Julia',
-          'subtitle': 'Yesterday',
+          'timestamp': DateTime.now().subtract(Duration(days: 1)),
+          'firstName': 'Julia',
+          'lastName': 'Kowalska',
         },
       ];
     });
@@ -111,10 +106,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         itemBuilder: (context, index) {
                           return ActivityCard(
                             title: notifications[index]['title'] ?? 'No title',
-                            description:
-                                notifications[index]['message'] ?? 'No message',
-                            subtitle:
-                                notifications[index]['message'] ?? 'No message',
+                            description: notifications[index]['message'],
+                            timestamp: notifications[index]['timestamp'],
+                            firstName: notifications[index]['firstName'],
+                            lastName: notifications[index]['lastName'],
                           );
                         },
                       ),
