@@ -24,44 +24,40 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
 
   void addNewExpenseInGroup(context) {}
 
-  Future<void> addNewMemberToGroup(String email,context)async {
-    var body={
-      "userEmail":email,
-      "groupId":widget.groupId
-    };
-    var response = await httpService.post("/api/GroupMembership/joinNewMember", body);
-    if(response == null)return;
+  Future<void> addNewMemberToGroup(String email, context) async {
+    var body = {"userEmail": email, "groupId": widget.groupId};
+    var response =
+        await httpService.post("/api/GroupMembership/joinNewMember", body);
+    if (response == null) return;
     var result = response.body;
-    if(result == null)return;
+    if (result == null) return;
     Navigator.of(context).pop();
     await getMemberships();
-
   }
 
-  void showNewMemberDialog(){
+  void showNewMemberDialog() {
     final TextEditingController emailController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Add to group', style: TextStyle(fontWeight: FontWeight.bold)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text('Add to group',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           content: Form(
             key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
                 TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'User Email',
                     border: OutlineInputBorder(),
                   ),
-
                 ),
               ],
             ),
@@ -79,7 +75,7 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
                 foregroundColor: Colors.black,
               ),
               onPressed: () {
-                addNewMemberToGroup(emailController.text,context);
+                addNewMemberToGroup(emailController.text, context);
               },
               child: Text('Add Friend'),
             ),
@@ -88,8 +84,6 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
       },
     );
   }
-
-
 
   Future<void> getMemberships() async {
     var body = {"groupId": widget.groupId};
@@ -123,6 +117,7 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
     // getExpensesInsideGroup();
     getMemberships();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,51 +170,51 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
             Flexible(
               child: groupMemberships.isEmpty
                   ? Center(
-                child: Text(
-                  'No memberships yet',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              )
+                      child: Text(
+                        'No memberships yet',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    )
                   : SizedBox(
-                height: 80,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: groupMemberships.length,
-                  itemBuilder: (context, index) {
-                    var member = groupMemberships[index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      alignment: Alignment.center,
-                      height: 90,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        color: ColorConstants.secondaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.person,
-                            size: 40,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            member['user']['username'] ?? '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
+                      height: 80,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: groupMemberships.length,
+                        itemBuilder: (context, index) {
+                          var member = groupMemberships[index];
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            alignment: Alignment.center,
+                            height: 90,
+                            width: 90,
+                            decoration: BoxDecoration(
+                              color: ColorConstants.secondaryColor,
+                              shape: BoxShape.circle,
                             ),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  member['user']['username'] ?? '',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
             ),
             SizedBox(height: 16),
             Text(
@@ -234,37 +229,36 @@ class _EditGroupWidgetState extends State<EditGroupWidget> {
             Flexible(
               child: expenses.isEmpty
                   ? Center(
-                child: Text(
-                  'No expenses added yet.',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              )
+                      child: Text(
+                        'No expenses added yet.',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    )
                   : ListView.builder(
-                itemCount: expenses.length,
-                itemBuilder: (context, index) {
-                  var expense = expenses[index];
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      itemCount: expenses.length,
+                      itemBuilder: (context, index) {
+                        var expense = expenses[index];
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              expense['description'],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              '${expense['amount'].toStringAsFixed(2)} ${expense['currency']}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    child: ListTile(
-                      title: Text(
-                        expense['description'],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Text(
-                        '${expense['amount'].toStringAsFixed(2)} ${expense['currency']}',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
           ],
         ),
       ),
     );
   }
-
 }
