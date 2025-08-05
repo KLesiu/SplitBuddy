@@ -19,7 +19,6 @@ class ActivityCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  // 🧠 Funkcja obliczająca, ile czasu temu przyszło powiadomienie
   String getTimeAgo(DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
@@ -70,7 +69,7 @@ class ActivityCard extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    if (description != null) // ✅ tylko jeśli istnieje
+                    if (description != null)
                       Text(
                         description!,
                         style: TextStyle(
