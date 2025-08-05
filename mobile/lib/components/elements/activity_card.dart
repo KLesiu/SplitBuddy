@@ -1,13 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/elements/avatar_widget.dart';
 import 'package:split_buddy/constants/color-constants.dart';
+
+import 'avatar.dart';
 
 class ActivityCard extends StatelessWidget {
   final String title;
-  final String description;
+  final String? description;
+  final DateTime timestamp;
+  final String firstName;
+  final String lastName;
 
-  const ActivityCard({required this.title, required this.description, Key? key})
-      : super(key: key);
+  const ActivityCard({
+    required this.title,
+    this.description,
+    required this.timestamp,
+    required this.firstName,
+    required this.lastName,
+    Key? key,
+  }) : super(key: key);
+
+  // 🧠 Funkcja obliczająca, ile czasu temu przyszło powiadomienie
+  String getTimeAgo(DateTime time) {
+    final now = DateTime.now();
+    final difference = now.difference(time);
+
+    if (difference.inMinutes < 1) return 'Just now';
+    if (difference.inMinutes < 60) return '${difference.inMinutes} minutes ago';
+    if (difference.inHours < 24) return '${difference.inHours} hours ago';
+    if (difference.inDays == 1) return 'Yesterday';
+    return '${difference.inDays} days ago';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +43,17 @@ class ActivityCard extends StatelessWidget {
         ),
       ),
       child: SizedBox(
-        height: 100,
+        height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: AvatarWidget(),
+              child: Avatar(
+                firstName: firstName,
+                lastName: lastName,
+                size: 60,
+              ),
             ),
             Expanded(
               child: Padding(
@@ -44,8 +70,16 @@ class ActivityCard extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
+                    if (description != null) // ✅ tylko jeśli istnieje
+                      Text(
+                        description!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: ColorConstants.whiteColor,
+                        ),
+                      ),
                     Text(
-                      description,
+                      getTimeAgo(timestamp),
                       style: TextStyle(
                         fontSize: 13,
                         color: ColorConstants.whiteColor,

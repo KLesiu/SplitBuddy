@@ -95,9 +95,18 @@ class _GroupsPageState extends State<GroupsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConstants.backgroundColor,
+        leading: IconButton(
+          icon: Icon(
+            Icons.chevron_left,
+            color: ColorConstants.primaryColor,
+            size: 40,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           'Groups',
-          style: TextStyle(color: ColorConstants.primaryColor),
+          style: TextStyle(
+              color: ColorConstants.primaryColor), // Ustawienie koloru
         ),
       ),
       body: Container(

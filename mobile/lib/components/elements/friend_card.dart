@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:split_buddy/components/elements/avatar_widget.dart';
 import 'package:split_buddy/constants/color-constants.dart';
+
+import 'avatar.dart';
 
 class FriendCard extends StatelessWidget {
   final String username;
   final String email;
 
-  const FriendCard({required this.username, required this.email, Key? key})
-      : super(key: key);
+  const FriendCard({
+    required this.username,
+    required this.email,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,11 @@ class FriendCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: AvatarWidget(),
+              child: Avatar(
+                firstName: "Antoni",
+                lastName: 'Krawczyk',
+                size: 60,
+              ),
             ),
             Expanded(
               child: Padding(

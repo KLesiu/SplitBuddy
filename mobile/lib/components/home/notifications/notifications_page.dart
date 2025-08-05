@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:split_buddy/components/elements/activity_card.dart';
 import 'package:split_buddy/components/elements/custom-form-input.dart';
@@ -20,14 +18,31 @@ class _NotificationsPageState extends State<NotificationsPage> {
   final TextEditingController searchController = TextEditingController();
 
   void getNotifications() async {
-    var response = await httpService.get("/api/Notifications/getAll");
-    if (response == null) return;
-    var result = jsonDecode(response.body);
-    if (result != null && result is List) {
-      setState(() {
-        notifications = List<Map<String, dynamic>>.from(result as Iterable);
-      });
-    }
+    setState(() {
+      notifications = [
+        {
+          'title': 'Tymczasowe rozwiązanie',
+          'message': 'Anna added a new expense to Trip to Rome',
+          'timestamp': DateTime.now().subtract(Duration(minutes: 3)),
+          'firstName': 'Anna',
+          'lastName': 'Nowak',
+        },
+        {
+          'title': 'Payment received',
+          'message': 'You received 25 PLN from Mark',
+          'timestamp': DateTime.now().subtract(Duration(hours: 1)),
+          'firstName': 'Mark',
+          'lastName': 'Zieliński',
+        },
+        {
+          'title': 'Reminder',
+          'message': 'Don\'t forget to settle up with Julia',
+          'timestamp': DateTime.now().subtract(Duration(days: 1)),
+          'firstName': 'Julia',
+          'lastName': 'Kowalska',
+        },
+      ];
+    });
   }
 
   @override
@@ -91,8 +106,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         itemBuilder: (context, index) {
                           return ActivityCard(
                             title: notifications[index]['title'] ?? 'No title',
-                            description:
-                                notifications[index]['message'] ?? 'No message',
+                            description: notifications[index]['message'],
+                            timestamp: notifications[index]['timestamp'],
+                            firstName: notifications[index]['firstName'],
+                            lastName: notifications[index]['lastName'],
                           );
                         },
                       ),
