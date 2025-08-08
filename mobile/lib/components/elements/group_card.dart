@@ -9,6 +9,7 @@ class GroupCard extends StatelessWidget {
   final int membersCount;
   final String balanceInfo;
   final VoidCallback onTap;
+  final IconData avatarIcon;
 
   const GroupCard({
     Key? key,
@@ -18,6 +19,7 @@ class GroupCard extends StatelessWidget {
     required this.membersCount,
     required this.balanceInfo,
     required this.onTap,
+    required this.avatarIcon,
   }) : super(key: key);
 
   @override
@@ -59,15 +61,13 @@ class GroupCard extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 26,
-                          backgroundColor: Color(0xFFC4A663),
-                          child: Text(
-                            '🌴',
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.black,
-                            ),
+                          backgroundColor: ColorConstants.primaryColor,
+                          child: Icon(
+                            avatarIcon, // <-- używamy parametru
+                            color: Colors.black,
+                            size: 28,
                           ),
                         ),
                         const SizedBox(width: 14),

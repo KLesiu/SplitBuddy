@@ -21,6 +21,8 @@ class _GroupsPageState extends State<GroupsPage> {
   List<Map<String, dynamic>> filteredGroups = [];
   final TextEditingController searchController = TextEditingController();
 
+
+
   Future<void> getGroups() async {
     var response = await httpService.get("/api/Group/getAllUserGroups");
     if (response == null) return;
@@ -165,6 +167,7 @@ class _GroupsPageState extends State<GroupsPage> {
                                     5, // też dynamicznie jeśli masz w danych
                                 balanceInfo:
                                     '💵 You are owed PLN  23.00', // lub 'You are owed \$15.00'
+                                avatarIcon: Icons.beach_access, // 🌴
                                 onTap: () => navigateToEditGroup(
                                     groups[index]['name'], groups[index]['id']),
                               ),
