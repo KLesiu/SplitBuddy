@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../constants/color-constants.dart';
 
 class CustomFormInput extends StatelessWidget {
@@ -28,25 +29,25 @@ class CustomFormInput extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(
-          color: ColorConstants.primaryColor,
+          color: ColorConstants.whiteColor,
           fontWeight: FontWeight.w300, // Light font weight
         ),
         filled: true,
         fillColor: ColorConstants.cardBackgroundColor,
         prefixIcon: icon != null
             ? Icon(
-          icon,
-          color: ColorConstants.primaryColor,
-        )
+                icon,
+                color: ColorConstants.whiteColor,
+              )
             : null,
         suffixIcon: suffixIcon != null
             ? GestureDetector(
-          onTap: onSuffixIconPressed,
-          child: Icon(
-            suffixIcon,
-            color: ColorConstants.primaryColor,
-          ),
-        )
+                onTap: onSuffixIconPressed,
+                child: Icon(
+                  suffixIcon,
+                  color: ColorConstants.primaryColor,
+                ),
+              )
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
