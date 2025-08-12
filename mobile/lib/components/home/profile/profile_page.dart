@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:split_buddy/components/elements/avatar_text.dart';
-import 'package:split_buddy/components/preload/preload.dart';
 
 import '../../../constants/color-constants.dart';
 import '../../../services/httpService.dart';
-import '../../../services/navigatorService.dart';
 import '../../../stores/userStore.dart';
+import '../../layout/header/header.dart';
 import '../payment/payment_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -54,92 +53,19 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void logout(BuildContext context) async {
-    await userStore.clearUser();
-    NavigatorService.navigateTo(context, Preload());
-  }
-
-  final String firstName = 'Norbert';
-  final String lastName = 'Gierczak';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        // menu po lewej
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: ColorConstants.backgroundColor,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: ColorConstants.primaryColor,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                // dodaj akcję
-              },
-            ),
-            // Możesz dodać więcej pozycji menu
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        backgroundColor: ColorConstants.backgroundColor,
-        centerTitle: true,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(Icons.menu, color: ColorConstants.primaryColor),
-              onPressed: () {
-                Scaffold.of(context).openDrawer(); // otwiera drawer
-              },
-            );
-          },
-        ),
-        title: Text.rich(
-          TextSpan(
-            text: 'Welcome back, ',
-            style: TextStyle(
-              color: ColorConstants.primaryColor,
-              fontSize: 20,
-            ),
-            children: [
-              TextSpan(
-                text: username ?? '...',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app,
-                size: 30, color: ColorConstants.primaryColor),
-            onPressed: () {
-              logout(context);
-            },
-          ),
-        ],
+      appBar: Header(
+        username: username ?? '',
+        firstName: 'Norbert',
+        lastName: 'Gierczak',
       ),
       body: Container(
         color: ColorConstants.backgroundColor,
         padding: const EdgeInsets.all(16.0),
         child: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? Center(child: CircularProgressIndicator())
             : errorMessage != null
                 ? Center(
                     child: Text(
@@ -152,8 +78,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       Row(
                         children: [
                           AvatarText(
-                            firstName: firstName,
-                            lastName: lastName,
+                            firstName: 'Norbert',
+                            lastName: 'Gierczak',
                             size: 60,
                           ),
                           SizedBox(width: 16),

@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:split_buddy/constants/color-constants.dart';
+import 'package:split_buddy/services/httpService.dart';
 
-import '../../../services/httpService.dart';
+import '../../elements/custom-form-input.dart';
+import '../../elements/group_card.dart';
 import 'edit_group_widget.dart';
 
 class GroupsPage extends StatefulWidget {
@@ -16,6 +18,10 @@ class GroupsPage extends StatefulWidget {
 class _GroupsPageState extends State<GroupsPage> {
   final HttpService httpService = HttpService();
   List<Map<String, dynamic>> groups = [];
+  List<Map<String, dynamic>> filteredGroups = [];
+  final TextEditingController searchController = TextEditingController();
+
+
 
   Future<void> getGroups() async {
     var response = await httpService.get("/api/Group/getAllUserGroups");
@@ -23,15 +29,21 @@ class _GroupsPageState extends State<GroupsPage> {
     var result = jsonDecode(response.body);
     if (result != null && result is List) {
       setState(() {
-        groups = List<Map<String, dynamic>>.from(result as Iterable);
+        groups = List<Map<String, dynamic>>.from(result);
+        filteredGroups = groups;
       });
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getGroups();
+  void filterGroups(String query) {
+    setState(() {
+      filteredGroups = groups
+          .where((group) => group['name']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   void navigateToEditGroup(String groupName, int groupId) {
@@ -91,6 +103,12 @@ class _GroupsPageState extends State<GroupsPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getGroups();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -104,47 +122,55 @@ class _GroupsPageState extends State<GroupsPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Groups',
-          style: TextStyle(
-              color: ColorConstants.primaryColor), // Ustawienie koloru
+          'My groups',
+          style: TextStyle(color: ColorConstants.primaryColor),
         ),
       ),
       body: Container(
         color: ColorConstants.backgroundColor,
         child: Column(
           children: [
+            if (groups.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: CustomFormInput(
+                  controller: searchController,
+                  labelText: 'Search...',
+                  icon: Icons.search,
+                ),
+              ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: groups.isEmpty
+                child: filteredGroups.isEmpty
                     ? Center(
                         child: Text(
-                          'No groups created yet.',
+                          'No groups found.',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       )
                     : ListView.builder(
-                        itemCount: groups.length,
+                        itemCount: filteredGroups.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            color: Color(0xFF4EA95F),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Color(0xFFC4A663),
-                                child: Icon(Icons.group, color: Colors.black),
-                              ),
-                              title: Text(
-                                groups[index]['name'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
+                          final group = filteredGroups[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: GestureDetector(
                               onTap: () => navigateToEditGroup(
-                                  groups[index]['name'], groups[index]['id']),
+                                  group['name'], group['id']),
+                              child: GroupCard(
+                                groupName: groups[index]['name'],
+                                dateFrom:
+                                    '28.08', // To oczywiście trzeba pobrać z API jeśli jest
+                                dateTo: '10.09.2025',
+                                membersCount:
+                                    5, // też dynamicznie jeśli masz w danych
+                                balanceInfo:
+                                    '💵 You are owed PLN  23.00', // lub 'You are owed \$15.00'
+                                avatarIcon: Icons.beach_access, // 🌴
+                                onTap: () => navigateToEditGroup(
+                                    groups[index]['name'], groups[index]['id']),
+                              ),
                             ),
                           );
                         },
