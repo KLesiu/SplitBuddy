@@ -1,5 +1,1 @@
-enum ButtonStyleType {
-  Success,
-  Delete,
-  Outline,
-}
+enum ButtonStyleType { Success, Delete, Outline, Circle }
