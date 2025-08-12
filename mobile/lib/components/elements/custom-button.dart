@@ -64,7 +64,7 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.S:
         return EdgeInsets.symmetric(vertical: 5, horizontal: 10);
       case ButtonSize.M:
-        return EdgeInsets.symmetric(vertical: 12, horizontal: 24);
+        return EdgeInsets.symmetric(vertical: 14, horizontal: 22);
       case ButtonSize.L:
         return EdgeInsets.symmetric(vertical: 16, horizontal: 32);
       case ButtonSize.XL:
@@ -75,10 +75,10 @@ class CustomButton extends StatelessWidget {
   BorderRadius getBorderRadius() {
     switch (style) {
       case ButtonStyleType.Success:
-        return BorderRadius.circular(9);
+        return BorderRadius.circular(8);
       case ButtonStyleType.Delete:
       case ButtonStyleType.Outline:
-        return BorderRadius.circular(9); // mniejsze zaokrąglenie, np. 6
+        return BorderRadius.circular(8); // mniejsze zaokrąglenie, np. 6
       case ButtonStyleType.Circle:
         return BorderRadius.circular(
             24); // to się nie używa, bo CircleGold ma BoxShape.circle
