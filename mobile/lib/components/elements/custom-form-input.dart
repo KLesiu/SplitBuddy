@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../constants/color-constants.dart';
 
 class CustomFormInput extends StatelessWidget {
@@ -9,6 +10,7 @@ class CustomFormInput extends StatelessWidget {
   final String? Function(String?)? validator;
   final IconData? suffixIcon;
   final VoidCallback? onSuffixIconPressed;
+  final Color? fillColor;
 
   const CustomFormInput({
     required this.controller,
@@ -18,6 +20,7 @@ class CustomFormInput extends StatelessWidget {
     this.validator,
     this.suffixIcon,
     this.onSuffixIconPressed,
+    this.fillColor,
     Key? key,
   }) : super(key: key);
 
@@ -28,36 +31,36 @@ class CustomFormInput extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(
-          color: ColorConstants.primaryColor,
+          color: ColorConstants.whiteColor,
           fontWeight: FontWeight.w300, // Light font weight
         ),
         filled: true,
-        fillColor: ColorConstants.cardBackgroundColor,
+        fillColor: fillColor ?? ColorConstants.cardBackgroundColor,
         prefixIcon: icon != null
             ? Icon(
-          icon,
-          color: ColorConstants.primaryColor,
-        )
+                icon,
+                color: ColorConstants.whiteColor,
+              )
             : null,
         suffixIcon: suffixIcon != null
             ? GestureDetector(
-          onTap: onSuffixIconPressed,
-          child: Icon(
-            suffixIcon,
-            color: ColorConstants.primaryColor,
-          ),
-        )
+                onTap: onSuffixIconPressed,
+                child: Icon(
+                  suffixIcon,
+                  color: ColorConstants.whiteColor,
+                ),
+              )
             : null,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
+          borderRadius: BorderRadius.circular(7), // 🎯 Zaokrąglone rogi
           borderSide: BorderSide(color: ColorConstants.borderColor),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
+          borderRadius: BorderRadius.circular(7), // 🎯 Zaokrąglone rogi
           borderSide: BorderSide(color: ColorConstants.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12), // 🎯 Zaokrąglone rogi
+          borderRadius: BorderRadius.circular(7), // 🎯 Zaokrąglone rogi
           borderSide: BorderSide(color: ColorConstants.primaryColor, width: 2),
         ),
       ),

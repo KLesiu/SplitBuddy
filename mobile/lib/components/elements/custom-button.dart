@@ -65,18 +65,6 @@ class CustomButton extends StatelessWidget {
     }
   }
 
-  // Dynamiczny fontSize
-  double getFontSize() {
-    switch (size) {
-      case ButtonSize.M:
-        return 14;
-      case ButtonSize.L:
-        return 16;
-      case ButtonSize.XL:
-        return 18;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
@@ -90,7 +78,6 @@ class CustomButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: fontSize.value,
           fontWeight: fontWeight ?? FontWeight.normal,
           color: getTextColor(),
         ),
