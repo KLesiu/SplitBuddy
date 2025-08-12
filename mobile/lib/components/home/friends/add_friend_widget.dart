@@ -160,36 +160,32 @@ class AddFriendWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomButton(
-                            style: ButtonStyleType
-                                .Outline, // zakładam, że masz styl 'Danger' na czerwony (dla Cancel)
-                            text: 'Cancel',
-                            onClick: () {
-                              Navigator.of(context).pop();
-                            },
-                            size:
-                                ButtonSize.M, // dobierz rozmiar według potrzeb
-                            fontSize: ButtonFontSize.Medium,
-                            fontWeight: FontWeight.normal,
+                          Expanded(
+                            child: CustomButton(
+                              style: ButtonStyleType.Outline,
+                              text: 'Cancel',
+                              onClick: () {
+                                Navigator.pop(context);
+                              },
+                              size: ButtonSize.M,
+                              fontSize: ButtonFontSize.Medium,
+                            ),
                           ),
-                          const SizedBox(
-                              width: 16), // odstęp między przyciskami
-                          CustomButton(
-                            style: ButtonStyleType
-                                .Success, // zielony przycisk 'Add Friend'
-                            text: 'Send requests',
-                            onClick: () {
-                              if (formKey.currentState!.validate()) {
-                                addFriend();
-                              }
-                            },
-                            size: ButtonSize.M,
-                            fontSize: ButtonFontSize.Medium,
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: CustomButton(
+                              style: ButtonStyleType.Success,
+                              text: 'Send Request',
+                              onClick: () {
+                                Navigator.pop(context);
+                              },
+                              size: ButtonSize.M,
+                              fontSize: ButtonFontSize.Medium,
+                            ),
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),

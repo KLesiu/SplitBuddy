@@ -32,7 +32,7 @@ class CustomButton extends StatelessWidget {
     }
     switch (style) {
       case ButtonStyleType.Success:
-        return Colors.green;
+        return ColorConstants.secondaryColor;
       case ButtonStyleType.Delete:
         return Colors.red;
       case ButtonStyleType.Outline:
@@ -53,7 +53,7 @@ class CustomButton extends StatelessWidget {
 
   BorderSide getBorder() {
     if (style == ButtonStyleType.Outline) {
-      return BorderSide(color: ColorConstants.primaryColor, width: 0.6);
+      return BorderSide(color: ColorConstants.primaryColor, width: 0.4);
     }
     return BorderSide.none;
   }
