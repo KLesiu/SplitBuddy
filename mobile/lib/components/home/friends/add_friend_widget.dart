@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/color-constants.dart';
 import '../../../services/httpService.dart';
+import '../../elements/custom-form-input.dart';
 
 class AddFriendWidget extends StatelessWidget {
   final Function() onFriendAdded;
@@ -16,8 +18,8 @@ class AddFriendWidget extends StatelessWidget {
         _showAddFriendDialog(context);
       },
       child: Icon(
-        Icons
-            .add_rounded, // zamiana z Icons.add na add_rounded dla grubszej ikony
+        Icons.add_rounded,
+        // zamiana z Icons.add na add_rounded dla grubszej ikony
         size:
             45, // zwiększenie rozmiaru, żeby plusik był większy i bardziej widoczny
         color: Colors.black,
@@ -43,21 +45,31 @@ class AddFriendWidget extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Add New Friend',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: ColorConstants.backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          title: Text(
+            'Add Friends',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: ColorConstants.whiteColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           content: Form(
             key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
+                CustomFormInput(
                   controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Friend Email',
-                    border: OutlineInputBorder(),
-                  ),
+                  labelText: 'Friend Email',
+                  icon: Icons.search,
+                  fillColor: ColorConstants.homeBackgroundColor,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter an email';
@@ -67,25 +79,41 @@ class AddFriendWidget extends StatelessWidget {
                     return null;
                   },
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
+          actionsPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4EA95F),
+                backgroundColor: const Color(0xFF4EA95F),
                 foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
               onPressed: () {
-                addFriend();
+                if (formKey.currentState!.validate()) {
+                  addFriend();
+                }
               },
-              child: Text('Add Friend'),
+              child: const Text(
+                'Add Friend',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ],
         );
