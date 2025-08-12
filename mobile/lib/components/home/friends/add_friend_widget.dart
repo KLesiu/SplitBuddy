@@ -39,19 +39,19 @@ class AddFriendWidget extends StatelessWidget {
     // *** ADDED: tymczasowa lista sugestii / wyników do podglądu (później -> API) ***
     final List<Map<String, String>> suggestions = [
       {
-        'name': 'Anna',
-        'surname': 'Kowalska',
-        'email': 'anna.kowalska@example.com',
+        'name': 'Cezary',
+        'surname': 'Dudek',
+        'email': 'cezary.dudek@example.com',
       },
       {
-        'name': 'Piotr',
-        'surname': 'Nowak',
-        'email': 'piotr.nowak@example.com',
+        'name': 'Kuba',
+        'surname': 'Leskiewicz',
+        'email': 'kuba.leskiewicz@example.com',
       },
       {
-        'name': 'Maria',
-        'surname': 'Wiśniewska',
-        'email': 'maria.wisniewska@example.com',
+        'name': 'Bartlomiej',
+        'surname': 'Makowski',
+        'email': 'bartlomiej.makowski@example.com',
       },
     ];
 
