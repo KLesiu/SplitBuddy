@@ -6,7 +6,7 @@ import 'package:split_buddy/components/elements/avatar_text.dart';
 import '../../../constants/color-constants.dart';
 import '../../../services/httpService.dart';
 import '../../../stores/userStore.dart';
-import '../../layout/header/header.dart';
+import '../../layout/header.dart';
 import '../payment/payment_page.dart';
 
 class ProfilePage extends StatefulWidget {
