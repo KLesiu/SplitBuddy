@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/color-constants.dart';
 import 'enums/button_font.dart';
 import 'enums/button_size.dart';
 import 'enums/button_style.dart';
@@ -31,11 +32,13 @@ class CustomButton extends StatelessWidget {
     }
     switch (style) {
       case ButtonStyleType.Success:
-        return Colors.green;
+        return ColorConstants.secondaryColor;
       case ButtonStyleType.Delete:
         return Colors.red;
       case ButtonStyleType.Outline:
         return Colors.transparent;
+      case ButtonStyleType.Circle:
+        return ColorConstants.primaryColor;
     }
   }
 
@@ -43,12 +46,14 @@ class CustomButton extends StatelessWidget {
     if (disabled) {
       return Colors.white.withOpacity(0.8); // trochę wyblakły tekst
     }
-    return style == ButtonStyleType.Outline ? Colors.black : Colors.white;
+    return style == ButtonStyleType.Outline
+        ? ColorConstants.primaryColor
+        : Colors.white;
   }
 
   BorderSide getBorder() {
     if (style == ButtonStyleType.Outline) {
-      return BorderSide(color: Colors.black, width: 2);
+      return BorderSide(color: ColorConstants.primaryColor, width: 0.4);
     }
     return BorderSide.none;
   }
@@ -56,8 +61,10 @@ class CustomButton extends StatelessWidget {
   // Rozmiary przycisku
   EdgeInsets getPadding() {
     switch (size) {
+      case ButtonSize.S:
+        return EdgeInsets.symmetric(vertical: 5, horizontal: 10);
       case ButtonSize.M:
-        return EdgeInsets.symmetric(vertical: 12, horizontal: 24);
+        return EdgeInsets.symmetric(vertical: 14, horizontal: 22);
       case ButtonSize.L:
         return EdgeInsets.symmetric(vertical: 16, horizontal: 32);
       case ButtonSize.XL:
@@ -65,8 +72,58 @@ class CustomButton extends StatelessWidget {
     }
   }
 
+  BorderRadius getBorderRadius() {
+    switch (style) {
+      case ButtonStyleType.Success:
+        return BorderRadius.circular(8);
+      case ButtonStyleType.Delete:
+      case ButtonStyleType.Outline:
+        return BorderRadius.circular(8); // mniejsze zaokrąglenie, np. 6
+      case ButtonStyleType.Circle:
+        return BorderRadius.circular(
+            24); // to się nie używa, bo CircleGold ma BoxShape.circle
+    }
+  }
+
+  double getCircleDiameter() {
+    switch (size) {
+      case ButtonSize.S:
+        return 24;
+      case ButtonSize.M:
+        return 32;
+      case ButtonSize.L:
+        return 42;
+      case ButtonSize.XL:
+        return 50;
+      default:
+        return 40;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (style == ButtonStyleType.Circle) {
+      final double diameter = getCircleDiameter();
+
+      return GestureDetector(
+        onTap: disabled ? null : onClick,
+        child: Container(
+          width: diameter,
+          height: diameter,
+          decoration: BoxDecoration(
+            color: disabled
+                ? Colors.grey.shade400
+                : ColorConstants.primaryColor, // złoty kolor
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.close_rounded,
+            color: disabled ? Colors.white.withOpacity(0.8) : Colors.black,
+          ),
+        ),
+      );
+    }
     return OutlinedButton(
       onPressed: disabled ? null : onClick,
       style: OutlinedButton.styleFrom(
@@ -74,6 +131,9 @@ class CustomButton extends StatelessWidget {
         foregroundColor: getTextColor(),
         padding: getPadding(),
         side: getBorder(),
+        shape: RoundedRectangleBorder(
+          borderRadius: getBorderRadius(),
+        ),
       ),
       child: Text(
         text,
