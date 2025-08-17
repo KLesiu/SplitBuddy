@@ -13,16 +13,20 @@ class CustomButton extends StatelessWidget {
   final FontWeight? fontWeight;
   final bool disabled;
   final ButtonFontSize fontSize;
+  final Widget? child; // <-- NOWE
+  final String? circleText; // nowy parametr, opcjonalny
 
   const CustomButton({
     super.key,
     required this.style,
     required this.text,
+    this.child, // <-- NOWE
     required this.onClick,
     required this.size,
     required this.fontSize,
     this.fontWeight,
     this.disabled = false,
+    this.circleText, // <-- nowy
   });
 
   // Styl przycisku na podstawie stylu typu (Success, Delete, Outline)
@@ -135,12 +139,72 @@ class CustomButton extends StatelessWidget {
           borderRadius: getBorderRadius(),
         ),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontWeight: fontWeight ?? FontWeight.normal,
-          color: getTextColor(),
-        ),
+      child: child ??
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize == ButtonFontSize.Small ? 12 : 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+    );
+  }
+}
+
+extension CustomButtonFactory on CustomButton {
+  static Widget circleWithText({
+    required String text,
+    required VoidCallback onClick,
+    ButtonSize size = ButtonSize.L,
+    ButtonFontSize fontSize = ButtonFontSize.Medium,
+    bool disabled = false,
+  }) {
+    double diameter;
+    switch (size) {
+      case ButtonSize.S:
+        diameter = 24;
+        break;
+      case ButtonSize.M:
+        diameter = 32;
+        break;
+      case ButtonSize.L:
+        diameter = 42;
+        break;
+      case ButtonSize.XL:
+        diameter = 50;
+        break;
+    }
+
+    return GestureDetector(
+      onTap: disabled ? null : onClick,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: diameter,
+            height: diameter,
+            decoration: BoxDecoration(
+              color:
+                  disabled ? Colors.grey.shade400 : ColorConstants.primaryColor,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.add, color: Colors.white, size: diameter * 0.5),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize == ButtonFontSize.Small ? 12 : 14,
+                fontWeight: FontWeight.bold,
+                color: disabled
+                    ? Colors.grey.shade600
+                    : ColorConstants.primaryColor,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
