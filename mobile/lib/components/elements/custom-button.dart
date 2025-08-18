@@ -15,6 +15,8 @@ class CustomButton extends StatelessWidget {
   final ButtonFontSize fontSize;
   final Widget? child; // <-- NOWE
   final String? circleText; // nowy parametr, opcjonalny
+  final double? height;
+  final Color? backgroundColor;
 
   const CustomButton({
     super.key,
@@ -27,13 +29,13 @@ class CustomButton extends StatelessWidget {
     this.fontWeight,
     this.disabled = false,
     this.circleText, // <-- nowy
+    this.height, // <---
+    this.backgroundColor, // <---
   });
 
   // Styl przycisku na podstawie stylu typu (Success, Delete, Outline)
   Color getBackgroundColor() {
-    if (disabled) {
-      return Colors.grey.shade400; // kolor dla disabled
-    }
+    if (disabled) return Colors.grey.shade400;
     switch (style) {
       case ButtonStyleType.Success:
         return ColorConstants.secondaryColor;
@@ -43,6 +45,8 @@ class CustomButton extends StatelessWidget {
         return Colors.transparent;
       case ButtonStyleType.Circle:
         return ColorConstants.primaryColor;
+      case ButtonStyleType.ProfileButton: // <- dodane
+        return Colors.grey.shade400;
     }
   }
 
@@ -82,10 +86,11 @@ class CustomButton extends StatelessWidget {
         return BorderRadius.circular(8);
       case ButtonStyleType.Delete:
       case ButtonStyleType.Outline:
-        return BorderRadius.circular(8); // mniejsze zaokrąglenie, np. 6
+        return BorderRadius.circular(8);
       case ButtonStyleType.Circle:
-        return BorderRadius.circular(
-            24); // to się nie używa, bo CircleGold ma BoxShape.circle
+        return BorderRadius.circular(24);
+      case ButtonStyleType.ProfileButton: // <- dodane
+        return BorderRadius.circular(8);
     }
   }
 
@@ -106,6 +111,25 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (style == ButtonStyleType.ProfileButton) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      final screenHeight = MediaQuery.of(context).size.height;
+
+      return GestureDetector(
+        onTap: disabled ? null : onClick,
+        child: Container(
+          width: screenWidth * 0.30, // 25% szerokości ekranu
+          height: screenHeight * 0.10, // 10% wysokości ekranu
+          decoration: BoxDecoration(
+            color: backgroundColor ?? ColorConstants.homeBackgroundColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          alignment: Alignment.center,
+          child: child, // AvatarText lub ikonka
+        ),
+      );
+    }
+
     if (style == ButtonStyleType.Circle) {
       final double diameter = getCircleDiameter();
 
@@ -128,26 +152,33 @@ class CustomButton extends StatelessWidget {
         ),
       );
     }
-    return OutlinedButton(
-      onPressed: disabled ? null : onClick,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: getBackgroundColor(),
-        foregroundColor: getTextColor(),
-        padding: getPadding(),
-        side: getBorder(),
-        shape: RoundedRectangleBorder(
+    return Container(
+        height:
+            height ?? null, // jeśli height podany → wymusza, jak nie to auto
+        decoration: BoxDecoration(
+          color: backgroundColor ?? getBackgroundColor(),
           borderRadius: getBorderRadius(),
         ),
-      ),
-      child: child ??
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: fontSize == ButtonFontSize.Small ? 12 : 16,
-              fontWeight: FontWeight.bold,
+        child: OutlinedButton(
+          onPressed: disabled ? null : onClick,
+          style: OutlinedButton.styleFrom(
+            backgroundColor: getBackgroundColor(),
+            foregroundColor: getTextColor(),
+            padding: getPadding(),
+            side: getBorder(),
+            shape: RoundedRectangleBorder(
+              borderRadius: getBorderRadius(),
             ),
           ),
-    );
+          child: child ??
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize == ButtonFontSize.Small ? 12 : 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        ));
   }
 }
 

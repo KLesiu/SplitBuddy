@@ -22,7 +22,7 @@ class ProfilePageFriendsView extends StatelessWidget {
         fontSize: ButtonFontSize.Medium,
       ),
       CustomButton(
-        style: ButtonStyleType.Outline,
+        style: ButtonStyleType.ProfileButton,
         text: "",
         onClick: () {},
         size: ButtonSize.L,
@@ -30,7 +30,7 @@ class ProfilePageFriendsView extends StatelessWidget {
         child: const AvatarText(firstName: "John", lastName: "Doe"),
       ),
       CustomButton(
-        style: ButtonStyleType.Outline,
+        style: ButtonStyleType.ProfileButton,
         text: "",
         onClick: () {},
         size: ButtonSize.L,

@@ -11,7 +11,7 @@ class AvatarText extends StatelessWidget {
     super.key,
     required this.firstName,
     required this.lastName,
-    this.size = 60,
+    this.size = 50,
   });
 
   @override
@@ -33,7 +33,7 @@ class AvatarText extends StatelessWidget {
           child: Text(
             '$initial. $lastName',
             style: TextStyle(
-              fontSize: size * 0.15,
+              fontSize: size * 0.22,
               color: Colors.white,
               fontWeight: FontWeight.w500,
             ),

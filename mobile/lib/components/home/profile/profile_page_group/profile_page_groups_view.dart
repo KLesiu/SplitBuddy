@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../constants/color-constants.dart';
 import '../../../elements/custom-button.dart';
 import '../../../elements/enums/button_font.dart';
 import '../../../elements/enums/button_size.dart';
@@ -23,48 +24,46 @@ class ProfilePageGroupsView extends StatelessWidget {
       ),
       // Grupa 1
       CustomButton(
-        style: ButtonStyleType.Outline,
+        style: ButtonStyleType.ProfileButton,
         text: "",
         onClick: () {},
         size: ButtonSize.L,
         fontSize: ButtonFontSize.Medium,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.group, size: 32, color: Colors.black87),
-            SizedBox(height: 4),
-            Text("Trip to Rome",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          children: [
+            Icon(Icons.beach_access,
+                size: 30, color: ColorConstants.primaryColor),
+            Text("Malaga",
+                style:
+                    TextStyle(fontSize: 12, color: ColorConstants.whiteColor)),
           ],
         ),
       ),
       // Grupa 2
       CustomButton(
-        style: ButtonStyleType.Outline,
+        style: ButtonStyleType.ProfileButton,
         text: "",
         onClick: () {},
-        size: ButtonSize.S,
+        size: ButtonSize.L,
         fontSize: ButtonFontSize.Medium,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.group, size: 32, color: Colors.black87),
-            SizedBox(height: 4),
-            Text("Weekend BBQ",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          children: [
+            Icon(Icons.home, size: 30, color: ColorConstants.primaryColor),
+            Text("Home",
+                style:
+                    TextStyle(fontSize: 12, color: ColorConstants.whiteColor)),
           ],
         ),
       ),
     ];
 
-    return SizedBox(
-      height: 100, // stała wysokość sekcji
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        itemCount: buttons.length,
-        itemBuilder: (context, index) => buttons[index],
-        separatorBuilder: (context, index) => const SizedBox(width: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // ✅ równe odstępy
+        children: buttons,
       ),
     );
   }

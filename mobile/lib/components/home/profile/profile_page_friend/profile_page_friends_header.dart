@@ -13,8 +13,8 @@ class ProfilePageFriendsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity, // ✅ pełna szerokość ekranu
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      color: Colors.black87, // 🎨 kolor tła nagłówka
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      color: ColorConstants.homeBackgroundColor, // 🎨 kolor tła nagłówka
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
